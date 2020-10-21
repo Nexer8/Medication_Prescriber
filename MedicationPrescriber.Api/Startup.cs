@@ -1,3 +1,6 @@
+using AutoMapper;
+using FluentValidation.AspNetCore;
+using MedicationPrescriber.Api.Mapper;
 using MedicationPresriber.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using static MedicationPrescriber.Api.Dtos.DoctorDto;
 
 namespace MedicationPrescriber
 {
@@ -22,11 +26,13 @@ namespace MedicationPrescriber
         {
             services.AddDbContext<MedicationPresriberDbContext>(options =>
                 options.UseSqlServer(Configuration.GetSection("AzureConnectionString").Value, x => x.MigrationsAssembly("MedicationPresriber.Domain")));
+            services.AddMvc().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<DoctorDtoValidator>());
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Medication Presriber API", Version = "v1" });
             });
+            services.AddAutoMapper(typeof(MappingProfile));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

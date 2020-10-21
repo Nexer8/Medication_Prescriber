@@ -3,6 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MedicationPresriber.Domain;
 using MedicationPresriber.Domain.Models;
+using MedicationPrescriber.Api.Dtos;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore.Internal;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace MedicationPrescriber.Api.Controllers
 {
@@ -11,39 +16,57 @@ namespace MedicationPrescriber.Api.Controllers
     public class PatientsController : ControllerBase
     {
         private readonly MedicationPresriberDbContext _context;
+        private readonly IMapper _mapper;
 
-        public PatientsController(MedicationPresriberDbContext context)
+        public PatientsController(MedicationPresriberDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            return Ok(await _context.Patients.ToListAsync());
+            var patientsEntitiesList = await _context.Patients.Include(x => x.User).ToListAsync();
+            return Ok(_mapper.Map<List<PatientDto>>(patientsEntitiesList));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var patient = await _context.Patients.FirstOrDefaultAsync(x => x.PersonalId == id);
+            var patientEntity = await _context.Patients.Include(x => x.User).FirstOrDefaultAsync(x => x.PersonalId == id);
 
-            if (patient == null)
+            if (patientEntity == null)
             {
                 return NotFound();
             }
 
-            return Ok(patient);
+            return Ok(_mapper.Map<PatientDto>(patientEntity));
         }
 
         
         [HttpPost]
-        public async Task<IActionResult> PostAsync(Patient patient)
+        public async Task<IActionResult> PostAsync(PatientDto patientDto)
         {
-            _context.Patients.Add(patient);
+            if(_context.Patients.Any(x => x.PersonalId == patientDto.PersonalId))
+            {
+                return BadRequest($"User with personalId: {patientDto.PersonalId} already exists");
+            }    
+
+            var user = new User
+            {
+                FirstName = patientDto.FirstName,
+                LastName = patientDto.LastName
+            };
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPatient", new { id = patient.PersonalId }, patient);
+            var patientEntity = _mapper.Map<Patient>(patientDto);
+            patientEntity.UserId = user.Id;
+            _context.Patients.Add(patientEntity);
+            await _context.SaveChangesAsync();
+
+            return Ok(patientDto);
         }
 
         [HttpDelete("{id}")]

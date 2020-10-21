@@ -3,6 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MedicationPresriber.Domain;
 using MedicationPresriber.Domain.Models;
+using MedicationPrescriber.Api.Dtos;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore.Internal;
+using System.Security.Cryptography.X509Certificates;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace MedicationPrescriber.Api.Controllers
 {
@@ -11,16 +17,19 @@ namespace MedicationPrescriber.Api.Controllers
     public class MedicationsController : ControllerBase
     {
         private readonly MedicationPresriberDbContext _context;
+        private readonly IMapper _mapper;
 
-        public MedicationsController(MedicationPresriberDbContext context)
+        public MedicationsController(MedicationPresriberDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            return Ok(await _context.Medications.ToListAsync());
+            var medicationEntitiesList = await _context.Medications.ToListAsync();
+            return Ok(_mapper.Map<List<MedicationDto>>(medicationEntitiesList));
         }
          
         [HttpGet("{id}")]
@@ -33,17 +42,29 @@ namespace MedicationPrescriber.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(medication);
+            return Ok(_mapper.Map<MedicationDto>(medication));
         }
 
         
         [HttpPost]
-        public async Task<IActionResult> PostAsync(Medication medication)
+        public async Task<IActionResult> PostAsync(MedicationDto medicationdto)
         {
-            _context.Medications.Add(medication);
+            if(!_context.Doctors.Any(x => x.Id == medicationdto.DoctorId))
+            {
+                return BadRequest($"Doctor with id: {medicationdto.DoctorId} does not exists!");
+            }
+
+            if(!_context.Patients.Any(x => x.PersonalId == medicationdto.PatientId))
+            {
+                return BadRequest($"Patient with id: {medicationdto.PatientId} does not exists!");
+            }
+
+            var medicationEntity = _mapper.Map<Medication>(medicationdto);
+            _context.Medications.Add(medicationEntity);
             await _context.SaveChangesAsync();
 
-            return Ok(medication);
+            medicationdto.Id = medicationEntity.Id;
+            return Ok(medicationdto);
         }
 
         [HttpDelete("{id}")]

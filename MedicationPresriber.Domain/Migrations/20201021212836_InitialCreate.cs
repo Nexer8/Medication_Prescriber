@@ -45,8 +45,7 @@ namespace MedicationPresriber.Domain.Migrations
                 name: "Patients",
                 columns: table => new
                 {
-                    PersonalId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PersonalId = table.Column<int>(nullable: false),
                     Birthdate = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<int>(nullable: false)
                 },

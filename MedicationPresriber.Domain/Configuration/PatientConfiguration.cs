@@ -14,6 +14,7 @@ namespace MedicationPresriber.Domain.Configuration
             builder.HasOne(x => x.User);
             builder.HasMany(x => x.Medications).WithOne(x => x.Patient).OnDelete(DeleteBehavior.Cascade);
             builder.HasKey(x => x.PersonalId);
+            builder.Property(o => o.PersonalId).ValueGeneratedNever();
         }
     }
 }

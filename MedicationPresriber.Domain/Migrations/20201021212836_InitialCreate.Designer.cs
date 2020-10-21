@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicationPresriber.Domain.Migrations
 {
     [DbContext(typeof(MedicationPresriberDbContext))]
-    [Migration("20201021154737_InitialCreate")]
+    [Migration("20201021212836_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,9 +84,7 @@ namespace MedicationPresriber.Domain.Migrations
             modelBuilder.Entity("MedicationPresriber.Domain.Models.Patient", b =>
                 {
                     b.Property<int>("PersonalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Birthdate")
                         .HasColumnType("datetime2");

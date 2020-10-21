@@ -82,9 +82,7 @@ namespace MedicationPresriber.Domain.Migrations
             modelBuilder.Entity("MedicationPresriber.Domain.Models.Patient", b =>
                 {
                     b.Property<int>("PersonalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Birthdate")
                         .HasColumnType("datetime2");

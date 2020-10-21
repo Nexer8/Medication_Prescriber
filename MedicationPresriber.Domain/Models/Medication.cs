@@ -18,7 +18,7 @@ namespace MedicationPresriber.Domain.Models
 
         public int Dosage { get; set; }
 
-        public string Timing { get; set; }
+        public Timing Timing { get; set; }
 
         public Doctor Doctor { get; set; }
 
