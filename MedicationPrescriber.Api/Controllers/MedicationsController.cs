@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using System.Security.Cryptography.X509Certificates;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace MedicationPrescriber.Api.Controllers
 {
@@ -45,7 +46,27 @@ namespace MedicationPrescriber.Api.Controllers
             return Ok(_mapper.Map<MedicationDto>(medication));
         }
 
-        
+        [HttpGet("patient/{patientId}")]
+        public async Task<IActionResult> GeByUserIdAsync(int patientId)
+        {
+            var medication = await _context.Medications
+                .Where(x => x.PatientId == patientId)
+                .OrderByDescending(x => x.StartDate)
+                .ToListAsync();
+            return Ok(_mapper.Map<List<MedicationDto>>(medication));
+        }
+
+        [HttpGet("doctor/{doctorId}")]
+        public async Task<IActionResult> GeByDoctorIdAsync(int doctorId)
+        {
+            var medication = await _context.Medications
+                .Where(x => x.DoctorId == doctorId)
+                .OrderByDescending(x => x.StartDate)
+                .ToListAsync();
+            return Ok(_mapper.Map<List<MedicationDto>>(medication));
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> PostAsync(MedicationDto medicationdto)
         {
@@ -64,6 +85,36 @@ namespace MedicationPrescriber.Api.Controllers
             await _context.SaveChangesAsync();
 
             medicationdto.Id = medicationEntity.Id;
+            return Ok(medicationdto);
+        }
+
+        [HttpPut("id")]
+        public async Task<IActionResult> PostAsync(int id, MedicationDto medicationdto)
+        {
+            var medication = await _context.Medications.FirstOrDefaultAsync(x => x.Id == id);
+            if (medication == null)
+            {
+                return NotFound();
+            }
+            if (medication.DoctorId != medicationdto.DoctorId)
+            {
+                return BadRequest($"Doctor with id: {medicationdto.DoctorId} does not exists!");
+            }
+
+            if (!_context.Patients.Any(x => x.PersonalId == medicationdto.PatientId))
+            {
+                return BadRequest($"Patient with id: {medicationdto.PatientId} does not exists!");
+            }
+
+            medication.Dosage = medicationdto.Dosage;
+            medication.StartDate = medicationdto.StartDate;
+            medication.EndDate = medicationdto.EndDate;
+            medication.Timing = (Timing)Enum.Parse(typeof(Timing), medicationdto.Timing);
+            medication.Name = medicationdto.Name;
+
+            _context.Medications.Update(medication);
+            await _context.SaveChangesAsync();
+
             return Ok(medicationdto);
         }
 

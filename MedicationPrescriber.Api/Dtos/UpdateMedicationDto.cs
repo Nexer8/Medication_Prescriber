@@ -1,20 +1,10 @@
 ﻿using FluentValidation;
-using MedicationPresriber.Domain.Models;
-using Newtonsoft.Json;
 using System;
-using System.Text;
 
 namespace MedicationPrescriber.Api.Dtos
 {
-    public class MedicationDto
+    public class UpdateMedicationDto
     {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id { get; set; }
-
-        public int PatientId { get; set; }
-
-        public int DoctorId { get; set; }
-
         public string Name { get; set; }
 
         public DateTime StartDate { get; set; }
@@ -26,9 +16,9 @@ namespace MedicationPrescriber.Api.Dtos
         public string Timing { get; set; }
     }
 
-    public class MedicationDtoValidator : AbstractValidator<MedicationDto>
+    public class UpdateMedicationDtoValidator : AbstractValidator<UpdateMedicationDto>
     {
-        public MedicationDtoValidator()
+        public UpdateMedicationDtoValidator()
         {
             RuleFor(x => x.Name).NotEmpty();
             RuleFor(x => x.StartDate).NotEmpty();

@@ -69,6 +69,29 @@ namespace MedicationPrescriber.Api.Controllers
             return Ok(patientDto);
         }
 
+        [HttpPut]
+        public async Task<IActionResult> PostAsync(int id, PatientDto patientDto)
+        {
+            var patient = await _context.Patients.Include(x => x.User).FirstOrDefaultAsync(x => x.PersonalId == id);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+            if (_context.Patients.Any(x => x.PersonalId == patientDto.PersonalId))
+            {
+                return BadRequest($"User with personalId: {patientDto.PersonalId} already exists");
+            }
+
+            patient.User.FirstName = patientDto.FirstName;
+            patient.User.LastName = patientDto.LastName;
+            patient.Birthdate = patientDto.Birthdate;
+            _context.Patients.Update(patient);
+            _context.Users.Update(patient.User);
+            await _context.SaveChangesAsync();
+
+            return Ok(patientDto);
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
