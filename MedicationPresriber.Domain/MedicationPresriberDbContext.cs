@@ -6,6 +6,11 @@ namespace MedicationPresriber.Domain
 {
     public class MedicationPresriberDbContext : DbContext
     {
+        public MedicationPresriberDbContext(DbContextOptions<MedicationPresriberDbContext> dbOptions) : base(dbOptions)
+        {
+
+        }
+
         public DbSet<Doctor> Doctors { get; set; }
 
         public DbSet<Patient> Patients { get; set; }

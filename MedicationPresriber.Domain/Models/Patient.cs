@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace MedicationPresriber.Domain.Models
 {
@@ -12,5 +12,7 @@ namespace MedicationPresriber.Domain.Models
         public int UserId { get; set; }
 
         public User User { get; set; }
+
+        public List<Medication> Medications { get; set; }
     }
 }

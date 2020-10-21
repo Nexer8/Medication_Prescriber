@@ -19,8 +19,8 @@ namespace MedicationPresriber.Domain.Configuration
                    .IsRequired();
             builder.Property(x => x.Timing)
                    .IsRequired();
-            builder.HasOne(x => x.Patient);
-            builder.HasOne(x => x.Doctor);
+            builder.HasOne(x => x.Patient).WithMany(x => x.Medications);
+            builder.HasOne(x => x.Doctor).WithMany(x => x.Medications);
             builder.HasKey(x => x.Id);
         }
     }
