@@ -20,7 +20,7 @@ jobs:
     # Use the community Action to install Flutter
     - uses: subosito/flutter-action@v1
       with:
-        flutter-version: '1.17.x' 
+        flutter-version: '1.20.x' 
         channel: 'stable'
     # Get flutter packages
     - run: flutter pub get
@@ -30,5 +30,3 @@ jobs:
     - run: flutter format --set-exit-if-changed .
     # Analyze our Dart code
     - run: flutter analyze
-    # Run tests and write code coverage results
-    # - run: flutter test --coverage test
