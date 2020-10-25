@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ptsiim/models/Medication.dart';
+import 'package:ptsiim/models/medication.dart';
 
 class MedicationDetailsScreen extends StatelessWidget {
   final Medication medication;
@@ -45,14 +45,14 @@ class MedicationDetailsScreen extends StatelessWidget {
                           Text('Personal id',
                               style: TextStyle(
                                   fontSize: 16, color: Colors.grey[600])),
-                          Text(medication.patientId,
+                          Text(medication.patientId.toString(),
                               style: TextStyle(
                                   fontSize: 18, color: Colors.grey[800])),
                           SizedBox(height: 10),
                           Text('Doctor name',
                               style: TextStyle(
                                   fontSize: 16, color: Colors.grey[600])),
-                          Text(medication.doctorId,
+                          Text(medication.doctorId.toString(),
                               style: TextStyle(
                                   fontSize: 18, color: Colors.grey[800])),
                           SizedBox(height: 10),

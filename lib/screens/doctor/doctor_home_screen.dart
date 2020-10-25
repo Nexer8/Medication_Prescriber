@@ -1,25 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:ptsiim/models/Patient.dart';
+import 'package:ptsiim/models/doctor.dart';
+import 'package:ptsiim/models/patient.dart';
 
 class DoctorHomeScreen extends StatefulWidget {
+  final Doctor doctor;
+  final List<Patient> patients;
+
+  const DoctorHomeScreen({Key key, this.doctor, this.patients})
+      : super(key: key);
+
   @override
   _DoctorHomeScreenState createState() => _DoctorHomeScreenState();
 }
 
 class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
-  List<Patient> _patients = [
-    Patient('90112003331', 'Jan', 'Kowalski', '20.11.1990'),
-    Patient('90112003331', 'Adam', 'Dupa', '04.04.1991'),
-    Patient('90112003331', 'Marcin', 'Dety', '14.41.1997'),
-    Patient('90112003331', 'Alan', 'Nowicki', '10.11.1956'),
-    Patient('90112003331', 'Jakub', 'Kowalczyk', '20.12.1942'),
-    Patient('90112003331', 'Michał', 'Drwal', '01.01.1987'),
-    Patient('90112003331', 'Anna', 'Małysz', '17.02.1965'),
-    Patient('90112003331', 'Iwona', 'Nowak', '30.09.1954'),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +74,6 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
               Column(
                 children: [
                   Text('Dupad dupa'),
-
                 ],
               ),
             ],
