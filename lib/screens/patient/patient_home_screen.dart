@@ -2,39 +2,26 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:ptsiim/models/Medication.dart';
-import 'package:ptsiim/models/Patient.dart';
+import 'package:ptsiim/models/medication.dart';
+import 'package:ptsiim/models/patient.dart';
 import 'package:ptsiim/screens/patient/medication_details_screen.dart';
 
 import 'patient_details_screen.dart';
 import 'patient_welcome_screen.dart';
 
 class PatientHomeScreen extends StatefulWidget {
+  final Patient patient;
+  final List<Medication> medications;
+
+  const PatientHomeScreen({Key key, this.patient, this.medications})
+      : super(key: key);
+
   @override
   _PatientHomeScreenState createState() => _PatientHomeScreenState();
 }
 
 class _PatientHomeScreenState extends State<PatientHomeScreen> {
   //Object for test UI
-  Patient patient = Patient(90112003331, 'Jan', 'Kowalski', '20.11.1990');
-
-  List<Medication> _medications = [
-    // Medication(90112003331, 'Lekarz 1', 'Apap', '12/12/2020', '15/12/2020', 1,
-    //     'After eating'),
-    // Medication(90112003331, 'Lekarz 1', 'Skrzypowita', '22/11/2020',
-    //     '10/12/2020', 2, 'After eating'),
-    // Medication('90112003331', 'Lekarz 2', 'Stoperan', '14/12/2020',
-    //     '15/01/2022', 1, 'After eating'),
-    // Medication('90112003331', 'Lekarz 2', 'Vitacentrum', '21/10/2020',
-    //     '21/11/2025', 2, 'Before eating'),
-    // Medication('90112003331', 'Lekarz 2', 'Nospa', '13/01/2021', '15/01/2021',
-    //     2, 'Before eating'),
-    // Medication('90112003331', 'Lekarz 3', 'Gripex', '28/10/2020', '04/11/2020',
-    //     2, 'After eating'),
-    // Medication('90112003331', 'Lekarz 3', 'Gripex Max', '28/10/2020',
-    //     '04/11/2020', 1, 'After eating'),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,8 +56,8 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      PatientProfileScreen(patient: patient)));
+                                  builder: (context) => PatientProfileScreen(
+                                      patient: widget.patient)));
                         }),
                   ],
                 ),
@@ -88,7 +75,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Hello,\n${patient.firstName}!',
+                            'Hello,\n${widget.patient.firstName}!',
                             style: TextStyle(
                                 color: Colors.grey[100], fontSize: 34),
                           ),
@@ -100,7 +87,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                           ),
                           SizedBox(height: 20),
                           Text(
-                              'Your plan for today:\n${_medications.length} medicines',
+                              'Your plan for today:\n${widget.medications.length} medicines',
                               style: TextStyle(
                                   color: Colors.grey[100], fontSize: 16)),
                         ],
@@ -122,7 +109,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                 Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: _medications.length,
+                    itemCount: widget.medications.length,
                     itemBuilder: (context, index) {
                       return Card(
                         color: Colors.grey[100],
@@ -134,10 +121,10 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                               color: Colors.primaries[
                                   Random().nextInt(Colors.primaries.length)],
                               size: 50),
-                          title: Text(_medications[index].name,
+                          title: Text(widget.medications[index].name,
                               style: TextStyle(color: Colors.grey[800])),
                           subtitle: Text(
-                              'Amout: ${_medications[index].dosage.toString()} When: ${_medications[index].timing}',
+                              'Amount: ${widget.medications[index].dosage.toString()} When: ${widget.medications[index].timing}',
                               style: TextStyle(color: Colors.grey[600])),
                           trailing: Icon(Icons.keyboard_arrow_right,
                               color: Colors.grey[600]),
@@ -146,7 +133,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => MedicationDetailsScreen(
-                                    medication: _medications[index]),
+                                    medication: widget.medications[index]),
                               ),
                             );
                           },

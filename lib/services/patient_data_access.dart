@@ -100,4 +100,22 @@ class PatientDataAccess implements IPatientDataAccess {
       throw HttpException(response.statusCode);
     }
   }
+
+  Future<List<Patient>> getPatientsByDoctorId(int doctorId) async {
+    String urlToGet = patientsUrl + '?$doctorId';
+
+    http.Response response =
+        await http.get(urlToGet, headers: {'accept': 'application/json'});
+
+    if (response.statusCode != 200) {
+      throw HttpException(response.statusCode);
+    }
+
+    var patientsJsonList = json.decode(response.body) as List;
+    List<Patient> patients = patientsJsonList
+        .map((patientJson) => Patient.fromJson(patientJson))
+        .toList();
+
+    return patients;
+  }
 }
