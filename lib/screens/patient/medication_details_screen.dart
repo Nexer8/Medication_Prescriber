@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
 
 class MedicationDetailsScreen extends StatelessWidget {
   final Medication medication;
+  final Doctor doctor;
 
-  MedicationDetailsScreen({@required this.medication});
+  MedicationDetailsScreen({@required this.medication, @required this.doctor});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class MedicationDetailsScreen extends StatelessWidget {
                           Text('Doctor name',
                               style: TextStyle(
                                   fontSize: 16, color: Colors.grey[600])),
-                          Text(medication.doctorId.toString(),
+                          Text('${doctor.firstName} ${doctor.lastName}',
                               style: TextStyle(
                                   fontSize: 18, color: Colors.grey[800])),
                           SizedBox(height: 10),
