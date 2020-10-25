@@ -5,11 +5,11 @@ import 'doctor_home_screen.dart';
 
 class DoctorWelcomeScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-  final _IdController = TextEditingController();
+  final _idController = TextEditingController();
 
   @override
   void dispose() {
-    _IdController.dispose();
+    _idController.dispose();
   }
 
   @override
@@ -46,7 +46,7 @@ class DoctorWelcomeScreen extends StatelessWidget {
                     Container(
                       width: 550,
                       child: TextFormField(
-                        controller: _IdController,
+                        controller: _idController,
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Please enter ID';

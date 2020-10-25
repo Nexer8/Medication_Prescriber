@@ -59,7 +59,7 @@ class PatientProfileScreen extends StatelessWidget {
                           Text('PESEL',
                               style: TextStyle(
                                   fontSize: 16, color: Colors.grey[600])),
-                          Text(patient.personalId,
+                          Text(patient.personalId.toString(),
                               style: TextStyle(
                                   fontSize: 18, color: Colors.grey[800])),
                           SizedBox(height: 10),

@@ -5,10 +5,10 @@ import 'package:ptsiim/screens/patient/patient_welcome_screen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() {
-  runApp(Medication_presciber());
+  runApp(MedicationPrescriber());
 }
 
-class Medication_presciber extends StatelessWidget {
+class MedicationPrescriber extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(

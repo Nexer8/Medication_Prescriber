@@ -16,23 +16,23 @@ class PatientHomeScreen extends StatefulWidget {
 
 class _PatientHomeScreenState extends State<PatientHomeScreen> {
   //Object for test UI
-  Patient patient = Patient('90112003331', 'Jan', 'Kowalski', '20.11.1990');
+  Patient patient = Patient(90112003331, 'Jan', 'Kowalski', '20.11.1990');
 
   List<Medication> _medications = [
-    Medication('90112003331', 'Lekarz 1', 'Apap', '12/12/2020', '15/12/2020', 1,
-        'After eating'),
-    Medication('90112003331', 'Lekarz 1', 'Skrzypowita', '22/11/2020',
-        '10/12/2020', 2, 'After eating'),
-    Medication('90112003331', 'Lekarz 2', 'Stoperan', '14/12/2020',
-        '15/01/2022', 1, 'After eating'),
-    Medication('90112003331', 'Lekarz 2', 'Vitacentrum', '21/10/2020',
-        '21/11/2025', 2, 'Before eating'),
-    Medication('90112003331', 'Lekarz 2', 'Nospa', '13/01/2021', '15/01/2021',
-        2, 'Before eating'),
-    Medication('90112003331', 'Lekarz 3', 'Gripex', '28/10/2020', '04/11/2020',
-        2, 'After eating'),
-    Medication('90112003331', 'Lekarz 3', 'Gripex Max', '28/10/2020',
-        '04/11/2020', 1, 'After eating'),
+    // Medication(90112003331, 'Lekarz 1', 'Apap', '12/12/2020', '15/12/2020', 1,
+    //     'After eating'),
+    // Medication(90112003331, 'Lekarz 1', 'Skrzypowita', '22/11/2020',
+    //     '10/12/2020', 2, 'After eating'),
+    // Medication('90112003331', 'Lekarz 2', 'Stoperan', '14/12/2020',
+    //     '15/01/2022', 1, 'After eating'),
+    // Medication('90112003331', 'Lekarz 2', 'Vitacentrum', '21/10/2020',
+    //     '21/11/2025', 2, 'Before eating'),
+    // Medication('90112003331', 'Lekarz 2', 'Nospa', '13/01/2021', '15/01/2021',
+    //     2, 'Before eating'),
+    // Medication('90112003331', 'Lekarz 3', 'Gripex', '28/10/2020', '04/11/2020',
+    //     2, 'After eating'),
+    // Medication('90112003331', 'Lekarz 3', 'Gripex Max', '28/10/2020',
+    //     '04/11/2020', 1, 'After eating'),
   ];
 
   @override

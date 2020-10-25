@@ -5,11 +5,11 @@ import 'package:flutter_icons/flutter_icons.dart';
 
 class PatientWelcomeScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-  final _IdController = TextEditingController();
+  final _idController = TextEditingController();
 
   @override
   void dispose() {
-    _IdController.dispose();
+    _idController.dispose();
   }
 
   @override
@@ -42,7 +42,7 @@ class PatientWelcomeScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 30),
                       TextFormField(
-                        controller: _IdController,
+                        controller: _idController,
                         keyboardType: TextInputType.number,
                         cursorColor: Colors.green,
                         decoration: InputDecoration(
