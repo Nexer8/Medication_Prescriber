@@ -2,9 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:ptsiim/components/error_handling_snackbar.dart';
+import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
 import 'package:ptsiim/models/patient.dart';
 import 'package:ptsiim/screens/patient/medication_details_screen.dart';
+import 'package:ptsiim/services/doctor_data_access.dart';
+import 'package:ptsiim/services/service_locator.dart';
 
 import 'patient_details_screen.dart';
 import 'patient_welcome_screen.dart';
@@ -128,14 +132,26 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                               style: TextStyle(color: Colors.grey[600])),
                           trailing: Icon(Icons.keyboard_arrow_right,
                               color: Colors.grey[600]),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MedicationDetailsScreen(
-                                    medication: widget.medications[index]),
-                              ),
-                            );
+                          onTap: () async {
+                            var doctorDataAccess =
+                                DIContainer.getIt.get<DoctorDataAccess>();
+
+                            try {
+                              Doctor doctor =
+                                  await doctorDataAccess.getDoctorById(
+                                      widget.medications[index].doctorId);
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MedicationDetailsScreen(
+                                      doctor: doctor,
+                                      medication: widget.medications[index]),
+                                ),
+                              );
+                            } catch (e) {
+                              ErrorHandlingSnackbar.show(e, context);
+                            }
                           },
                         ),
                       );
