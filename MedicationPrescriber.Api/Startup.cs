@@ -33,6 +33,7 @@ namespace MedicationPrescriber
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Medication Presriber API", Version = "v1" });
             });
             services.AddAutoMapper(typeof(MappingProfile));
+            services.AddApplicationInsightsTelemetry();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

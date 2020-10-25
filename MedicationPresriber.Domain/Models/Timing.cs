@@ -2,7 +2,7 @@
 {
     public enum Timing
     {
-        Irrevelant,
+        Irrelevant,
         BeforeEating,
         AfterEating
     }

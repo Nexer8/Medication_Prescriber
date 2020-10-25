@@ -18,6 +18,12 @@ namespace MedicationPrescriber.Api.Mapper
                 .ForMember(src => src.FirstName, dst => dst.MapFrom(x => x.User.FirstName))
                 .ForMember(src => src.LastName, dst => dst.MapFrom(x => x.User.LastName));
 
+            CreateMap<UpdatePatientDto, Patient>();
+            CreateMap<PatientDto, UpdatePatientDto>();
+            CreateMap<Patient, UpdatePatientDto>()
+                .ForMember(src => src.FirstName, dst => dst.MapFrom(x => x.User.FirstName))
+                .ForMember(src => src.LastName, dst => dst.MapFrom(x => x.User.LastName));
+
             CreateMap<MedicationDto, Medication>();
             CreateMap<Medication, MedicationDto>();
         }

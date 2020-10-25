@@ -6,7 +6,6 @@ using MedicationPresriber.Domain.Models;
 using MedicationPrescriber.Api.Dtos;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Internal;
-using System.Security.Cryptography.X509Certificates;
 using System.Linq;
 using System.Collections.Generic;
 using System;
