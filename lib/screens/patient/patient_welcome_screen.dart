@@ -14,11 +14,6 @@ class PatientWelcomeScreen extends StatelessWidget {
   final _idController = TextEditingController();
 
   @override
-  void dispose() {
-    _idController.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(
