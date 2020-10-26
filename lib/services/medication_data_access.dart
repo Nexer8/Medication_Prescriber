@@ -11,7 +11,7 @@ class MedicationDataAccess implements IMedicationDataAccess {
   static final String medicationsUrl = apiUrl + medicationsEndpoint;
 
   @override
-  Future<Medication> createMedication(Medication medication) async {
+  Future<void> createMedication(Medication medication) async {
     http.Response response = await http.post(
       medicationsUrl,
       headers: {
@@ -26,15 +26,10 @@ class MedicationDataAccess implements IMedicationDataAccess {
     if (response.statusCode != 200) {
       throw HttpException(response.statusCode);
     }
-
-    Medication createdMedication =
-        Medication.fromJson(json.decode(response.body));
-
-    return createdMedication;
   }
 
   @override
-  Future<Medication> editMedicationData(Medication medication) async {
+  Future<void> editMedicationData(Medication medication) async {
     String urlToPut = medicationsUrl + '/${medication.id.toString()}';
 
     http.Response response = await http.put(
@@ -51,11 +46,6 @@ class MedicationDataAccess implements IMedicationDataAccess {
     if (response.statusCode != 200) {
       throw HttpException(response.statusCode);
     }
-
-    Medication editedMedication =
-        Medication.fromJson(json.decode(response.body));
-
-    return editedMedication;
   }
 
   @override

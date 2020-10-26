@@ -35,7 +35,7 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         tooltip: 'Add new patient',
-        child: Icon(Icons.add),
+        child: Builder(builder: (BuildContext context) => Icon(Icons.add)),
         onPressed: () {
           showDialog(
             context: context,
@@ -186,153 +186,163 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
           );
         },
       ),
-      body: SafeArea(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          color: Colors.grey[100],
-          child: Row(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.2,
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(25.0),
-                    bottomRight: Radius.circular(25.0),
+      body: Builder(
+        builder: (BuildContext context) => SafeArea(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: Colors.grey[100],
+            child: Row(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(25.0),
+                      bottomRight: Radius.circular(25.0),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 150),
+                      Icon(
+                        Icons.account_circle_rounded,
+                        size: 120,
+                        color: Colors.grey[100],
+                      ),
+                      Text(
+                        widget.doctor.firstName,
+                        style: TextStyle(fontSize: 24, color: Colors.grey[100]),
+                      ),
+                      Text(
+                        widget.doctor.lastName,
+                        style: TextStyle(fontSize: 24, color: Colors.grey[100]),
+                      ),
+                      Text(
+                        widget.doctor.specialization,
+                        style: TextStyle(fontSize: 22, color: Colors.grey[100]),
+                      ),
+                      Spacer(),
+                      IconButton(
+                          icon: Icon(Icons.logout,
+                              size: 40, color: Colors.grey[100]),
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DoctorWelcomeScreen(),
+                              ),
+                            );
+                          }),
+                      SizedBox(height: 80),
+                    ],
                   ),
                 ),
-                child: Column(
-                  children: [
-                    SizedBox(height: 150),
-                    Icon(
-                      Icons.account_circle_rounded,
-                      size: 120,
-                      color: Colors.grey[100],
-                    ),
-                    Text(
-                      widget.doctor.firstName,
-                      style: TextStyle(fontSize: 24, color: Colors.grey[100]),
-                    ),
-                    Text(
-                      widget.doctor.lastName,
-                      style: TextStyle(fontSize: 24, color: Colors.grey[100]),
-                    ),
-                    Text(
-                      widget.doctor.specialization,
-                      style: TextStyle(fontSize: 22, color: Colors.grey[100]),
-                    ),
-                    Spacer(),
-                    IconButton(
-                        icon: Icon(Icons.logout,
-                            size: 40, color: Colors.grey[100]),
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DoctorWelcomeScreen(),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(32.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 128, vertical: 32),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Patients',
+                              style: TextStyle(
+                                  fontSize: 42, color: Colors.grey[800]),
                             ),
-                          );
-                        }),
-                    SizedBox(height: 80),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(32.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 128, vertical: 32),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Patients',
-                            style: TextStyle(
-                                fontSize: 42, color: Colors.grey[800]),
-                          ),
-                          SizedBox(height: 20),
-                          TextField(
-                            controller: _searchController,
-                            keyboardType: TextInputType.text,
-                            cursorColor: Colors.green,
-                            decoration: InputDecoration(
-                              prefixIcon:
-                                  Icon(Icons.search, color: Colors.grey[800]),
-                              contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 24.0),
-                              filled: true,
-                              fillColor: Colors.grey[100],
-                              focusColor: Colors.grey[100],
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25.0),
-                                borderSide: BorderSide.none,
+                            SizedBox(height: 20),
+                            TextField(
+                              controller: _searchController,
+                              keyboardType: TextInputType.text,
+                              cursorColor: Colors.green,
+                              decoration: InputDecoration(
+                                prefixIcon:
+                                    Icon(Icons.search, color: Colors.grey[800]),
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 24.0),
+                                filled: true,
+                                fillColor: Colors.grey[100],
+                                focusColor: Colors.grey[100],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  borderSide: BorderSide.none,
+                                ),
+                                hintStyle: TextStyle(
+                                  color: Colors.grey[800],
+                                ),
+                                hintText: "Search...",
                               ),
-                              hintStyle: TextStyle(
-                                color: Colors.grey[800],
-                              ),
-                              hintText: "Search...",
                             ),
-                          ),
-                          SizedBox(height: 20),
-                          Expanded(
-                            child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: widget.patients.length,
-                                itemBuilder: (context, index) {
-                                  return Card(
-                                    color: Colors.grey[100],
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                    ),
-                                    child: ListTile(
-                                        leading: Icon(FlutterIcons.account_mco,
-                                            size: 50),
-                                        title: Text(
-                                            '${widget.patients[index].firstName} ${widget.patients[index].lastName}'),
-                                        subtitle: Text(widget
-                                            .patients[index].personalId
-                                            .toString()),
-                                        onTap: () async {
-                                          var medicationDataAccess = DIContainer
-                                              .getIt
-                                              .get<MedicationDataAccess>();
+                            SizedBox(height: 20),
+                            Expanded(
+                              child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: widget.patients.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      color: Colors.grey[100],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
+                                      ),
+                                      child: ListTile(
+                                          leading: Icon(
+                                              FlutterIcons.account_mco,
+                                              size: 50),
+                                          title: Text(
+                                              '${widget.patients[index].firstName} ${widget.patients[index].lastName}'),
+                                          subtitle: Text(widget
+                                              .patients[index].personalId
+                                              .toString()),
+                                          onTap: () async {
+                                            var medicationDataAccess =
+                                                DIContainer.getIt.get<
+                                                    MedicationDataAccess>();
 
-                                          List<Medication> medications =
-                                              await medicationDataAccess
-                                                  .getMedicationsByPatientId(
-                                                      widget.patients[index]
-                                                          .personalId);
+                                            try {
+                                              List<Medication> medications =
+                                                  await medicationDataAccess
+                                                      .getMedicationsByPatientId(
+                                                          widget.patients[index]
+                                                              .personalId);
 
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DoctorPatientDetailsScreen(
-                                                patient: widget.patients[index],
-                                                medications: medications,
-                                                doctor: widget.doctor,
-                                              ),
-                                            ),
-                                          );
-                                        }),
-                                  );
-                                }),
-                          )
-                        ],
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DoctorPatientDetailsScreen(
+                                                    patient:
+                                                        widget.patients[index],
+                                                    medications: medications,
+                                                    doctor: widget.doctor,
+                                                  ),
+                                                ),
+                                              );
+                                            } catch (e) {
+                                              ErrorHandlingSnackbar.show(
+                                                  e, context);
+                                            }
+                                          }),
+                                    );
+                                  }),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
