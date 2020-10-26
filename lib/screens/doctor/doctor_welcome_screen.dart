@@ -42,7 +42,7 @@ class DoctorWelcomeScreen extends StatelessWidget {
                       Icon(
                         FlutterIcons.capsules_faw5s,
                         color: Colors.grey[100],
-                        size: 400,
+                        size: 350,
                       ),
                       SizedBox(height: 30),
                       Container(
@@ -86,7 +86,6 @@ class DoctorWelcomeScreen extends StatelessWidget {
                           side: BorderSide.none,
                         ),
                         onPressed: () async {
-                          //TODO: Auth
                           if (_formKey.currentState.validate()) {
                             var doctorDataAccess =
                                 DIContainer.getIt.get<DoctorDataAccess>();

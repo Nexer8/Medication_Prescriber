@@ -30,8 +30,9 @@ class PatientProfileScreen extends StatelessWidget {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(25.0)),
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
                     child: Padding(
                       padding: EdgeInsets.all(32.0),
                       child: Column(
@@ -42,33 +43,49 @@ class PatientProfileScreen extends StatelessWidget {
                                 size: 180, color: Colors.grey[800]),
                           ),
                           SizedBox(height: 10),
-                          Text('First name',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          Text(patient.firstName,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
+                          Text(
+                            'First name',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600]),
+                          ),
+                          Text(
+                            patient.firstName,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800]),
+                          ),
                           SizedBox(height: 10),
-                          Text('Last name',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          Text(patient.lastName,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
+                          Text(
+                            'Last name',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600]),
+                          ),
+                          Text(
+                            patient.lastName,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800]),
+                          ),
                           SizedBox(height: 10),
-                          Text('PESEL',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          Text(patient.personalId.toString(),
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
+                          Text(
+                            'PESEL',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600]),
+                          ),
+                          Text(
+                            patient.personalId.toString(),
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800]),
+                          ),
                           SizedBox(height: 10),
-                          Text('Birthdate',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          Text(patient.birthdate,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
+                          Text(
+                            'Birthdate',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600]),
+                          ),
+                          Text(
+                            patient.birthdate,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800]),
+                          ),
                         ],
                       ),
                     ),

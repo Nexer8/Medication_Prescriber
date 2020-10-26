@@ -30,12 +30,14 @@ class PatientWelcomeScreen extends StatelessWidget {
                     key: _formKey,
                     child: Column(
                       children: [
-                        Text('Medication prescriber ',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.grey[100],
-                                fontSize: 48,
-                                fontWeight: FontWeight.bold)),
+                        Text(
+                          'Medication prescriber ',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.grey[100],
+                              fontSize: 48,
+                              fontWeight: FontWeight.bold),
+                        ),
                         SizedBox(height: 20),
                         Icon(
                           FlutterIcons.capsules_faw5s,
@@ -62,7 +64,6 @@ class PatientWelcomeScreen extends StatelessWidget {
                             ),
                             hintText: "Please enter your PESEL",
                           ),
-                          //TODO: add validators
                           validator: (value) {
                             if (value.isEmpty)
                               return 'Please enter personal ID';
@@ -83,7 +84,6 @@ class PatientWelcomeScreen extends StatelessWidget {
                               side: BorderSide.none,
                             ),
                             onPressed: () async {
-                              //TODO: add sign in and send data to home screen
                               if (_formKey.currentState.validate()) {
                                 var patientDataAccess =
                                     DIContainer.getIt.get<PatientDataAccess>();

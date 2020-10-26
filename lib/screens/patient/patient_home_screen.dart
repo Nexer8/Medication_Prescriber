@@ -25,7 +25,6 @@ class PatientHomeScreen extends StatefulWidget {
 }
 
 class _PatientHomeScreenState extends State<PatientHomeScreen> {
-  //Object for test UI
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,22 +45,24 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                         icon: Icon(Icons.logout,
                             color: Colors.grey[800], size: 28),
                         onPressed: () {
-                          //TODO: add logout
                           Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      PatientWelcomeScreen()));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PatientWelcomeScreen(),
+                            ),
+                          );
                         }),
                     IconButton(
                         icon: Icon(Icons.account_circle_rounded,
                             color: Colors.grey[800], size: 28),
                         onPressed: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PatientProfileScreen(
-                                      patient: widget.patient)));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PatientProfileScreen(patient: widget.patient),
+                            ),
+                          );
                         }),
                   ],
                 ),
@@ -91,13 +92,16 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                           ),
                           SizedBox(height: 20),
                           Text(
-                              'Your plan for today:\n${widget.medications.length} medicines',
-                              style: TextStyle(
-                                  color: Colors.grey[100], fontSize: 16)),
+                            'Your plan for today:\n${widget.medications.length} medicines',
+                            style: TextStyle(
+                                color: Colors.grey[100], fontSize: 16),
+                          ),
                         ],
                       ),
                     ),
-                    Expanded(child: Image.asset('assets/drugs.png')),
+                    Expanded(
+                      child: Image.asset('assets/drugs.png'),
+                    ),
                   ]),
                 ),
                 SizedBox(height: 10),
@@ -109,7 +113,6 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                   ),
                 ),
                 SizedBox(height: 10),
-                //TODO: add stream to listview
                 Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -125,11 +128,14 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                               color: Colors.primaries[
                                   Random().nextInt(Colors.primaries.length)],
                               size: 50),
-                          title: Text(widget.medications[index].name,
-                              style: TextStyle(color: Colors.grey[800])),
+                          title: Text(
+                            widget.medications[index].name,
+                            style: TextStyle(color: Colors.grey[800]),
+                          ),
                           subtitle: Text(
-                              'Amount: ${widget.medications[index].dosage.toString()} When: ${widget.medications[index].timing}',
-                              style: TextStyle(color: Colors.grey[600])),
+                            'Amount: ${widget.medications[index].dosage.toString()} When: ${widget.medications[index].timing}',
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
                           trailing: Icon(Icons.keyboard_arrow_right,
                               color: Colors.grey[600]),
                           onTap: () async {

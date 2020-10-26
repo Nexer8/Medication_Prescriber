@@ -32,66 +32,96 @@ class MedicationDetailsScreen extends StatelessWidget {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(25.0)),
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
                     child: Padding(
                       padding: EdgeInsets.all(32.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Center(
-                              child: Image.asset('assets/details.png',
-                                  height: MediaQuery.of(context).size.height *
-                                      0.25)),
+                            child: Image.asset('assets/details.png',
+                                height:
+                                    MediaQuery.of(context).size.height * 0.25),
+                          ),
                           SizedBox(height: 10),
-                          Text('Personal id',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          Text(medication.patientId.toString(),
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
+                          Text(
+                            'Personal id',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600]),
+                          ),
+                          Text(
+                            medication.patientId.toString(),
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800]),
+                          ),
                           SizedBox(height: 10),
-                          Text('Doctor name',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          Text('${doctor.firstName} ${doctor.lastName}',
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
+                          Text(
+                            'Doctor name',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600]),
+                          ),
+                          Text(
+                            '${doctor.firstName} ${doctor.lastName}',
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800]),
+                          ),
                           SizedBox(height: 10),
-                          Text('Name',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          Text(medication.name,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
+                          Text(
+                            'Name',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600]),
+                          ),
+                          Text(
+                            medication.name,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800]),
+                          ),
                           SizedBox(height: 10),
-                          Text('Start date',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          Text(medication.startDate,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
+                          Text(
+                            'Start date',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600]),
+                          ),
+                          Text(
+                            medication.startDate,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800]),
+                          ),
                           SizedBox(height: 10),
-                          Text('End date',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          Text(medication.endDate,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
+                          Text(
+                            'End date',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600]),
+                          ),
+                          Text(
+                            medication.endDate,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800]),
+                          ),
                           SizedBox(height: 10),
-                          Text('Dosage',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          Text(medication.dosage.toString(),
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
+                          Text(
+                            'Dosage',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600]),
+                          ),
+                          Text(
+                            medication.dosage.toString(),
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800]),
+                          ),
                           SizedBox(height: 10),
-                          Text('Timing',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          Text(medication.timing,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
+                          Text(
+                            'Timing',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600]),
+                          ),
+                          Text(
+                            medication.timing,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800]),
+                          ),
                         ],
                       ),
                     ),
