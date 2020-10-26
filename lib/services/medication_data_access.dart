@@ -158,4 +158,29 @@ class MedicationDataAccess implements IMedicationDataAccess {
       throw HttpException(response.statusCode);
     }
   }
+
+  @override
+  Future<List<Medication>> getMedicationsByPatientIdAndDate(
+      int patientId, DateTime date) async {
+    String urlToGet = medicationsUrl +
+        '/patient/${patientId.toString()}?date=${date.toIso8601String()}';
+
+    http.Response response = await http.get(
+      urlToGet,
+      headers: {'accept': 'application/json'},
+    );
+
+    if (response.statusCode != 200) {
+      throw HttpException(response.statusCode);
+    }
+
+    var medicationsJsonList = json.decode(response.body) as List;
+    List<Medication> medications = medicationsJsonList
+        .map(
+          (medicationJson) => Medication.fromJson(medicationJson),
+        )
+        .toList();
+
+    return medications;
+  }
 }
