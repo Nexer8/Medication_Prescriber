@@ -29,12 +29,8 @@ class PatientDataAccess implements IPatientDataAccess {
   }
 
   @override
-  Future<void> editPatientData(Patient patient, {int newId}) async {
+  Future<void> editPatientData(Patient patient) async {
     String urlToPut = patientsUrl + '/${patient.personalId.toString()}';
-
-    if (newId != null) {
-      patient.personalId = newId;
-    }
 
     http.Response response = await http.put(
       urlToPut,

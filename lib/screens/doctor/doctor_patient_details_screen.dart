@@ -58,183 +58,181 @@ class _DoctorPatientDetailsScreenState
     return WillPopScope(
       onWillPop: () async => true,
       child: Scaffold(
-        floatingActionButton: Builder(
-          builder: (BuildContext context) => FloatingActionButton(
-            tooltip: 'Add new medicine',
-            child: Icon(Icons.add),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (_) => SimpleDialog(
-                  contentPadding: EdgeInsets.all(16.0),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25.0))),
-                  title: Text('Add new medicine'),
-                  children: [
-                    Container(
-                      height: 430,
-                      width: 400,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            TextField(
-                              controller: _nameController,
-                              keyboardType: TextInputType.text,
-                              cursorColor: Colors.green,
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 24.0),
-                                filled: true,
-                                fillColor: Colors.grey[100],
-                                focusColor: Colors.grey[100],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                  borderSide: BorderSide.none,
-                                ),
-                                hintStyle: TextStyle(
-                                  color: Colors.grey[800],
-                                ),
-                                hintText: "Name",
+        floatingActionButton: FloatingActionButton(
+          tooltip: 'Add new medicine',
+          child: Icon(Icons.add),
+          onPressed: () async {
+            showDialog(
+              context: context,
+              builder: (context) => SimpleDialog(
+                contentPadding: EdgeInsets.all(16.0),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0))),
+                title: Text('Add new medicine'),
+                children: [
+                  Container(
+                    height: 430,
+                    width: 400,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          TextField(
+                            controller: _nameController,
+                            keyboardType: TextInputType.text,
+                            cursorColor: Colors.green,
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 24.0),
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                              focusColor: Colors.grey[100],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: BorderSide.none,
                               ),
-                            ),
-                            SizedBox(height: 30),
-                            TextField(
-                              controller: _startDateController,
-                              keyboardType: TextInputType.text,
-                              cursorColor: Colors.green,
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 24.0),
-                                filled: true,
-                                fillColor: Colors.grey[100],
-                                focusColor: Colors.grey[100],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                  borderSide: BorderSide.none,
-                                ),
-                                hintStyle: TextStyle(
-                                  color: Colors.grey[800],
-                                ),
-                                hintText: "Start date",
+                              hintStyle: TextStyle(
+                                color: Colors.grey[800],
                               ),
+                              hintText: "Name",
                             ),
-                            SizedBox(height: 30),
-                            TextField(
-                              controller: _endDateController,
-                              keyboardType: TextInputType.text,
-                              cursorColor: Colors.green,
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 24.0),
-                                filled: true,
-                                fillColor: Colors.grey[100],
-                                focusColor: Colors.grey[100],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                  borderSide: BorderSide.none,
-                                ),
-                                hintStyle: TextStyle(
-                                  color: Colors.grey[800],
-                                ),
-                                hintText: "End date",
+                          ),
+                          SizedBox(height: 30),
+                          TextField(
+                            controller: _startDateController,
+                            keyboardType: TextInputType.text,
+                            cursorColor: Colors.green,
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 24.0),
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                              focusColor: Colors.grey[100],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: BorderSide.none,
                               ),
-                            ),
-                            SizedBox(height: 30),
-                            TextField(
-                              controller: _dosageController,
-                              keyboardType: TextInputType.text,
-                              cursorColor: Colors.green,
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 24.0),
-                                filled: true,
-                                fillColor: Colors.grey[100],
-                                focusColor: Colors.grey[100],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                  borderSide: BorderSide.none,
-                                ),
-                                hintStyle: TextStyle(
-                                  color: Colors.grey[800],
-                                ),
-                                hintText: "Dosage",
+                              hintStyle: TextStyle(
+                                color: Colors.grey[800],
                               ),
+                              hintText: "Start date",
                             ),
-                            SizedBox(height: 30),
-                            TextField(
-                              controller: _timingController,
-                              keyboardType: TextInputType.text,
-                              cursorColor: Colors.green,
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 24.0),
-                                filled: true,
-                                fillColor: Colors.grey[100],
-                                focusColor: Colors.grey[100],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                  borderSide: BorderSide.none,
-                                ),
-                                hintStyle: TextStyle(
-                                  color: Colors.grey[800],
-                                ),
-                                hintText: "Timing",
+                          ),
+                          SizedBox(height: 30),
+                          TextField(
+                            controller: _endDateController,
+                            keyboardType: TextInputType.text,
+                            cursorColor: Colors.green,
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 24.0),
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                              focusColor: Colors.grey[100],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: BorderSide.none,
                               ),
+                              hintStyle: TextStyle(
+                                color: Colors.grey[800],
+                              ),
+                              hintText: "End date",
                             ),
-                            SizedBox(height: 30),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-                                    icon: Icon(Icons.cancel_outlined,
-                                        color: Colors.red),
-                                    iconSize: 42,
-                                    onPressed: () {
+                          ),
+                          SizedBox(height: 30),
+                          TextField(
+                            controller: _dosageController,
+                            keyboardType: TextInputType.text,
+                            cursorColor: Colors.green,
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 24.0),
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                              focusColor: Colors.grey[100],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: BorderSide.none,
+                              ),
+                              hintStyle: TextStyle(
+                                color: Colors.grey[800],
+                              ),
+                              hintText: "Dosage",
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                          TextField(
+                            controller: _timingController,
+                            keyboardType: TextInputType.text,
+                            cursorColor: Colors.green,
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 24.0),
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                              focusColor: Colors.grey[100],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: BorderSide.none,
+                              ),
+                              hintStyle: TextStyle(
+                                color: Colors.grey[800],
+                              ),
+                              hintText: "Timing",
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              IconButton(
+                                  icon: Icon(Icons.cancel_outlined,
+                                      color: Colors.red),
+                                  iconSize: 42,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  }),
+                              IconButton(
+                                  icon: Icon(Icons.add_circle_outline,
+                                      color: Colors.green),
+                                  iconSize: 42,
+                                  onPressed: () async {
+                                    try {
+                                      Medication medication;
+                                      medication.doctorId = widget.doctor.id;
+                                      medication.patientId =
+                                          widget.patient.personalId;
+                                      medication.timing =
+                                          _timingController.text;
+                                      medication.dosage =
+                                          int.parse(_dosageController.text);
+                                      medication.name = _nameController.text;
+                                      medication.startDate =
+                                          _startDateController.text;
+                                      medication.endDate =
+                                          _endDateController.text;
+
+                                      var medicationDataAccess = DIContainer
+                                          .getIt
+                                          .get<MedicationDataAccess>();
+
+                                      await medicationDataAccess
+                                          .createMedication(medication);
+                                      //Create object and add to database
                                       Navigator.pop(context);
-                                    }),
-                                IconButton(
-                                    icon: Icon(Icons.add_circle_outline,
-                                        color: Colors.green),
-                                    iconSize: 42,
-                                    onPressed: () async {
-                                      try {
-                                        Medication medication;
-                                        medication.doctorId = widget.doctor.id;
-                                        medication.patientId =
-                                            widget.patient.personalId;
-                                        medication.timing =
-                                            _timingController.text;
-                                        medication.dosage =
-                                            int.parse(_dosageController.text);
-                                        medication.name = _nameController.text;
-                                        medication.startDate =
-                                            _startDateController.text;
-                                        medication.endDate =
-                                            _endDateController.text;
-
-                                        var medicationDataAccess = DIContainer
-                                            .getIt
-                                            .get<MedicationDataAccess>();
-
-                                        await medicationDataAccess
-                                            .createMedication(medication);
-                                        //Create object and add to database
-                                        Navigator.pop(context);
-                                      } catch (e) {
-                                        ErrorHandlingSnackbar.show(e, context);
-                                      }
-                                    }),
-                              ],
-                            ),
-                          ],
-                        ),
+                                    } catch (e) {
+                                      ErrorHandlingSnackbar.show(e, context);
+                                    }
+                                  }),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              );
-            },
-          ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
         body: Builder(
           builder: (BuildContext context) => SafeArea(
@@ -359,8 +357,6 @@ class _DoctorPatientDetailsScreenState
                                     iconSize: 42,
                                     icon: Icon(Icons.save, color: Colors.blue),
                                     onPressed: () async {
-                                      bool isIdChanged = false;
-
                                       if (_firstNameController.text != null) {
                                         widget.patient.firstName =
                                             _firstNameController.text;
@@ -369,12 +365,7 @@ class _DoctorPatientDetailsScreenState
                                         widget.patient.lastName =
                                             _lastNameController.text;
                                       }
-                                      if (_personalIdController.text != null &&
-                                          int.parse(
-                                                  _personalIdController.text) !=
-                                              widget.patient.personalId) {
-                                        isIdChanged = true;
-                                      }
+
                                       // TODO: To fix displaying
                                       if (_birthdateController.text != null) {
                                         widget.patient.birthdate =
@@ -385,16 +376,8 @@ class _DoctorPatientDetailsScreenState
                                           .get<PatientDataAccess>();
 
                                       try {
-                                        if (isIdChanged) {
-                                          await patientDataAccess
-                                              .editPatientData(widget.patient,
-                                                  newId: int.parse(
-                                                      _personalIdController
-                                                          .text));
-                                        } else {
-                                          await patientDataAccess
-                                              .editPatientData(widget.patient);
-                                        }
+                                        await patientDataAccess
+                                            .editPatientData(widget.patient);
 
                                         Navigator.pop(context);
                                       } catch (e) {
