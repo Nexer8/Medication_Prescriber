@@ -7,20 +7,16 @@ class ErrorHandlingSnackbar {
   static void show(Exception e, BuildContext context) {
     Scaffold.of(context).showSnackBar(SnackBar(
       duration: displayDuration,
-      // backgroundColor: kPrimaryColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(25), topRight: Radius.circular(25)),
       ),
       content: Text(
         e.toString(),
-        style: TextStyle(
-            fontSize: 20.0,
-            // color: kOnPrimaryColor,
-            fontWeight: FontWeight.normal),
+        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.normal),
       ),
       action: SnackBarAction(
         label: 'Close',
-        // textColor: kOnPrimaryColor,
         onPressed: () {
           Scaffold.of(context).hideCurrentSnackBar();
         },
