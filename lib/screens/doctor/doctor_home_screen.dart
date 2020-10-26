@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:ptsiim/components/error_handling_snackbar.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
 import 'package:ptsiim/models/patient.dart';
 import 'package:ptsiim/screens/doctor/doctor_patient_details_screen.dart';
+import 'package:ptsiim/services/medication_data_access.dart';
+import 'package:ptsiim/services/patient_data_access.dart';
+import 'package:ptsiim/services/service_locator.dart';
 
 import 'doctor_welcome_screen.dart';
 
@@ -25,14 +29,6 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
   final _lastNameController = TextEditingController();
   final _personalIdController = TextEditingController();
   final _birthdateController = TextEditingController();
-
-  List<Medication> medications = [
-    Medication(1, 233, 123, 'Dupa', '2313', '2414', 1, 'Duzo'),
-    Medication(1, 233, 123, 'Dupa', '2313', '2414', 1, 'Duzo'),
-    Medication(1, 233, 123, 'Dupa', '2313', '2414', 1, 'Duzo'),
-    Medication(1, 233, 123, 'Dupa', '2313', '2414', 1, 'Duzo'),
-    Medication(1, 233, 123, 'Dupa', '2313', '2414', 1, 'Duzo')
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -155,9 +151,28 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                                   icon: Icon(Icons.add_circle_outline,
                                       color: Colors.green),
                                   iconSize: 42,
-                                  onPressed: () {
-                                    //TODO: add patient to database
-                                    Navigator.pop(context);
+                                  onPressed: () async {
+                                    try {
+                                      Patient patient;
+                                      patient.personalId =
+                                          int.parse(_personalIdController.text);
+                                      patient.firstName =
+                                          _firstNameController.text;
+                                      patient.lastName =
+                                          _firstNameController.text;
+                                      patient.birthdate =
+                                          _birthdateController.text;
+
+                                      var patientDataAccess = DIContainer.getIt
+                                          .get<PatientDataAccess>();
+
+                                      await patientDataAccess
+                                          .createPatient(patient);
+
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      ErrorHandlingSnackbar.show(e, context);
+                                    }
                                   }),
                             ],
                           ),
@@ -285,15 +300,26 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                                         subtitle: Text(widget
                                             .patients[index].personalId
                                             .toString()),
-                                        onTap: () {
+                                        onTap: () async {
+                                          var medicationDataAccess = DIContainer
+                                              .getIt
+                                              .get<MedicationDataAccess>();
+
+                                          List<Medication> medications =
+                                              await medicationDataAccess
+                                                  .getMedicationsByPatientId(
+                                                      widget.patients[index]
+                                                          .personalId);
+
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   DoctorPatientDetailsScreen(
-                                                      patient: widget
-                                                          .patients[index],
-                                                      medications: medications),
+                                                patient: widget.patients[index],
+                                                medications: medications,
+                                                doctor: widget.doctor,
+                                              ),
                                             ),
                                           );
                                         }),

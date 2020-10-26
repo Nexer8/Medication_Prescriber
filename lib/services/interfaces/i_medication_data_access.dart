@@ -14,4 +14,7 @@ abstract class IMedicationDataAccess {
   Future<List<Medication>> getMedicationsByDoctorId(int doctorId);
 
   Future<void> deleteMedicationById(int medicationId);
+
+  Future<List<Medication>> getMedicationsByPatientIdAndDate(
+      int patientId, DateTime date);
 }

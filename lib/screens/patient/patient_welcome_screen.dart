@@ -97,8 +97,9 @@ class PatientWelcomeScreen extends StatelessWidget {
 
                                   List<Medication> medications =
                                       await medicationDataAccess
-                                          .getMedicationsByPatientId(
-                                              patient.personalId);
+                                          .getMedicationsByPatientIdAndDate(
+                                              patient.personalId,
+                                              DateTime.now());
 
                                   Navigator.pushReplacement(
                                     context,

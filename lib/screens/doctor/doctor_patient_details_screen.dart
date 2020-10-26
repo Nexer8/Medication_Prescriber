@@ -3,16 +3,22 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:ptsiim/components/error_handling_snackbar.dart';
+import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
 import 'package:ptsiim/models/patient.dart';
 import 'package:ptsiim/screens/doctor/doctor_medication_details_screen.dart';
+import 'package:ptsiim/services/medication_data_access.dart';
+import 'package:ptsiim/services/patient_data_access.dart';
+import 'package:ptsiim/services/service_locator.dart';
 
 class DoctorPatientDetailsScreen extends StatefulWidget {
   final Patient patient;
   final List<Medication> medications;
+  final Doctor doctor;
 
   DoctorPatientDetailsScreen(
-      {@required this.patient, @required this.medications});
+      {@required this.patient, @required this.medications, this.doctor});
 
   @override
   _DoctorPatientDetailsScreenState createState() =>
@@ -189,9 +195,33 @@ class _DoctorPatientDetailsScreenState
                                   icon: Icon(Icons.add_circle_outline,
                                       color: Colors.green),
                                   iconSize: 42,
-                                  onPressed: () {
-                                    //Create object and add to database
-                                    Navigator.pop(context);
+                                  onPressed: () async {
+                                    try {
+                                      Medication medication;
+                                      medication.doctorId = widget.doctor.id;
+                                      medication.patientId =
+                                          widget.patient.personalId;
+                                      medication.timing =
+                                          _timingController.text;
+                                      medication.dosage =
+                                          int.parse(_dosageController.text);
+                                      medication.name = _nameController.text;
+                                      medication.startDate =
+                                          _startDateController.text;
+                                      medication.endDate =
+                                          _endDateController.text;
+
+                                      var medicationDataAccess = DIContainer
+                                          .getIt
+                                          .get<MedicationDataAccess>();
+
+                                      await medicationDataAccess
+                                          .createMedication(medication);
+                                      //Create object and add to database
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      ErrorHandlingSnackbar.show(e, context);
+                                    }
                                   }),
                             ],
                           ),
@@ -290,8 +320,9 @@ class _DoctorPatientDetailsScreenState
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             DoctorMedicationDetailsScreen(
-                                                medication:
-                                                    widget.medications[index]),
+                                          medication: widget.medications[index],
+                                          doctor: widget.doctor,
+                                        ),
                                       ),
                                     );
                                   },
@@ -306,14 +337,52 @@ class _DoctorPatientDetailsScreenState
                               IconButton(
                                   iconSize: 42,
                                   icon: Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () {
-                                    //TODO: delete patient (simple dialog?)
+                                  onPressed: () async {
+                                    var patientDataAccess = DIContainer.getIt
+                                        .get<PatientDataAccess>();
+
+                                    try {
+                                      await patientDataAccess.deletePatientById(
+                                          widget.patient.personalId);
+
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      ErrorHandlingSnackbar.show(e, context);
+                                    }
                                   }),
                               IconButton(
                                   iconSize: 42,
                                   icon: Icon(Icons.save, color: Colors.blue),
-                                  onPressed: () {
-                                    //TODO: save
+                                  onPressed: () async {
+                                    if (_firstNameController.text != null) {
+                                      widget.patient.firstName =
+                                          _firstNameController.text;
+                                    }
+                                    if (_lastNameController.text != null) {
+                                      widget.patient.lastName =
+                                          _lastNameController.text;
+                                    }
+                                    if (_personalIdController.text != null) {
+                                      widget.patient.personalId =
+                                          int.parse(_personalIdController.text);
+                                    }
+                                    // TODO: To fix displaying
+                                    if (_birthdateController != null) {
+                                      widget.patient.birthdate =
+                                          _birthdateController.text;
+                                    }
+
+                                    var patientDataAccess = DIContainer.getIt
+                                        .get<PatientDataAccess>();
+
+                                    try {
+                                      await patientDataAccess
+                                          .editPatientData(widget.patient);
+
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      ErrorHandlingSnackbar.show(e, context);
+                                    }
                                   }),
                             ])
                       ],

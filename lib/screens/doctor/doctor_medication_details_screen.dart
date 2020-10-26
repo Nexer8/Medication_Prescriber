@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ptsiim/components/error_handling_snackbar.dart';
+import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
+import 'package:ptsiim/services/medication_data_access.dart';
+import 'package:ptsiim/services/service_locator.dart';
 
 class DoctorMedicationDetailsScreen extends StatefulWidget {
   final Medication medication;
+  final Doctor doctor;
 
-  DoctorMedicationDetailsScreen({@required this.medication});
+  DoctorMedicationDetailsScreen({@required this.medication, this.doctor});
 
   @override
   _DoctorMedicationDetailsScreenState createState() =>
@@ -80,8 +85,8 @@ class _DoctorMedicationDetailsScreenState
                           style:
                               TextStyle(fontSize: 16, color: Colors.grey[600]),
                         ),
-                        //TODO:
-                        Text('dWa ame}',
+                        Text(
+                            '${widget.doctor.firstName} ${widget.doctor.lastName}',
                             style: TextStyle(
                                 fontSize: 18, color: Colors.grey[800])),
                         SizedBox(height: 10),
@@ -131,14 +136,56 @@ class _DoctorMedicationDetailsScreenState
                               IconButton(
                                   iconSize: 42,
                                   icon: Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () {
-                                    //TODO: delete patient (simple dialog?)
+                                  onPressed: () async {
+                                    var medicationDataAccess = DIContainer.getIt
+                                        .get<MedicationDataAccess>();
+
+                                    try {
+                                      await medicationDataAccess
+                                          .deleteMedicationById(
+                                              widget.medication.id);
+
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      ErrorHandlingSnackbar.show(e, context);
+                                    }
                                   }),
                               IconButton(
                                   iconSize: 42,
                                   icon: Icon(Icons.save, color: Colors.blue),
-                                  onPressed: () {
-                                    //TODO: save
+                                  onPressed: () async {
+                                    if (_nameController.text != null) {
+                                      widget.medication.name =
+                                          _nameController.text;
+                                    }
+                                    if (_startDateController.text != null) {
+                                      widget.medication.startDate =
+                                          _startDateController.text;
+                                    }
+                                    if (_endDateController.text != null) {
+                                      widget.medication.endDate =
+                                          _endDateController.text;
+                                    }
+                                    if (_dosageController.text != null) {
+                                      widget.medication.dosage =
+                                          int.parse(_dosageController.text);
+                                    }
+                                    if (_timingController.text != null) {
+                                      widget.medication.timing =
+                                          _timingController.text;
+                                    }
+                                    var medicationDataAccess = DIContainer.getIt
+                                        .get<MedicationDataAccess>();
+
+                                    try {
+                                      await medicationDataAccess
+                                          .editMedicationData(
+                                              widget.medication);
+
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      ErrorHandlingSnackbar.show(e, context);
+                                    }
                                   }),
                             ])
                       ],
