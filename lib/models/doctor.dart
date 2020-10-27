@@ -9,7 +9,7 @@ class Doctor {
   String firstName;
   String lastName;
 
-  Doctor(this.id, this.firstName, this.lastName, this.specialization);
+  Doctor({this.id, this.firstName, this.lastName, this.specialization});
 
   factory Doctor.fromJson(Map<String, dynamic> json) => _$DoctorFromJson(json);
 

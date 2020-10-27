@@ -13,7 +13,7 @@ class Medication {
   int dosage;
   String timing;
 
-  Medication(
+  Medication({
     this.id,
     this.patientId,
     this.doctorId,
@@ -22,7 +22,7 @@ class Medication {
     this.endDate,
     this.dosage,
     this.timing,
-  );
+  });
 
   factory Medication.fromJson(Map<String, dynamic> json) =>
       _$MedicationFromJson(json);

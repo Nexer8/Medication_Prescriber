@@ -12,7 +12,6 @@ class MedicationDataAccess implements IMedicationDataAccess {
 
   @override
   Future<void> createMedication(Medication medication) async {
-    print('DUPA');
     http.Response response = await http.post(
       medicationsUrl,
       headers: {

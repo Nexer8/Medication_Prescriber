@@ -55,9 +55,12 @@ class _DoctorPatientDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
+    final _scaffoldKey = GlobalKey<ScaffoldState>();
+
     return WillPopScope(
       onWillPop: () async => true,
       child: Scaffold(
+        key: _scaffoldKey,
         floatingActionButton: FloatingActionButton(
           tooltip: 'Add new medicine',
           child: Icon(Icons.add),
@@ -141,7 +144,7 @@ class _DoctorPatientDetailsScreenState
                           SizedBox(height: 30),
                           TextField(
                             controller: _dosageController,
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.number,
                             cursorColor: Colors.green,
                             decoration: InputDecoration(
                               contentPadding:
@@ -197,19 +200,19 @@ class _DoctorPatientDetailsScreenState
                                   iconSize: 42,
                                   onPressed: () async {
                                     try {
-                                      Medication medication;
-                                      medication.doctorId = widget.doctor.id;
-                                      medication.patientId =
-                                          widget.patient.personalId;
-                                      medication.timing =
-                                          _timingController.text;
-                                      medication.dosage =
-                                          int.parse(_dosageController.text);
-                                      medication.name = _nameController.text;
-                                      medication.startDate =
-                                          _startDateController.text;
-                                      medication.endDate =
-                                          _endDateController.text;
+                                      var medication = Medication(
+                                          id: 0,
+                                          doctorId: widget.doctor.id,
+                                          patientId: widget.patient.personalId,
+                                          timing: _timingController.text,
+                                          dosage: _dosageController.text
+                                                  .contains(RegExp(r'^[0-9]+$'))
+                                              ? int.parse(
+                                                  _dosageController.text)
+                                              : 0,
+                                          name: _nameController.text,
+                                          startDate: _startDateController.text,
+                                          endDate: _endDateController.text);
 
                                       var medicationDataAccess = DIContainer
                                           .getIt
@@ -220,7 +223,8 @@ class _DoctorPatientDetailsScreenState
                                       //Create object and add to database
                                       Navigator.pop(context);
                                     } catch (e) {
-                                      ErrorHandlingSnackbar.show(e, context);
+                                      ErrorHandlingSnackbar.show(e, context,
+                                          scaffoldKey: _scaffoldKey);
                                     }
                                   }),
                             ],
@@ -234,159 +238,157 @@ class _DoctorPatientDetailsScreenState
             );
           },
         ),
-        body: Builder(
-          builder: (BuildContext context) => SafeArea(
-            child: SingleChildScrollView(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                color: Colors.grey[100],
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 32, horizontal: 256),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 128, vertical: 32),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                            child: Icon(Icons.account_circle_rounded,
-                                size: 150, color: Colors.grey[800]),
-                          ),
-                          SizedBox(height: 10),
-                          Text('First name',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          TextFormField(
-                              controller: _firstNameController,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
-                          SizedBox(height: 10),
-                          Text('Last name',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          TextFormField(
-                              controller: _lastNameController,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
-                          SizedBox(height: 10),
-                          Text('PESEL',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          TextFormField(
-                              controller: _personalIdController,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
-                          SizedBox(height: 10),
-                          Text('Birthdate',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          TextFormField(
-                              controller: _birthdateController,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
-                          SizedBox(height: 20),
-                          Expanded(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: widget.medications.length,
-                              itemBuilder: (context, index) {
-                                return Card(
-                                  color: Colors.grey[100],
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                  ),
-                                  child: ListTile(
-                                    leading: Icon(MaterialCommunityIcons.pill,
-                                        color: Colors.primaries[Random()
-                                            .nextInt(Colors.primaries.length)],
-                                        size: 50),
-                                    title: Text(widget.medications[index].name,
-                                        style:
-                                            TextStyle(color: Colors.grey[800])),
-                                    subtitle: Text(
-                                        'Amout: ${widget.medications[index].dosage.toString()} When: ${widget.medications[index].timing}',
-                                        style:
-                                            TextStyle(color: Colors.grey[600])),
-                                    trailing: Icon(Icons.keyboard_arrow_right,
-                                        color: Colors.grey[600]),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              DoctorMedicationDetailsScreen(
-                                            medication:
-                                                widget.medications[index],
-                                            doctor: widget.doctor,
-                                          ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: Colors.grey[100],
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 32, horizontal: 256),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 128, vertical: 32),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Icon(Icons.account_circle_rounded,
+                              size: 150, color: Colors.grey[800]),
+                        ),
+                        SizedBox(height: 10),
+                        Text('First name',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600])),
+                        TextFormField(
+                            controller: _firstNameController,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800])),
+                        SizedBox(height: 10),
+                        Text('Last name',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600])),
+                        TextFormField(
+                            controller: _lastNameController,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800])),
+                        SizedBox(height: 10),
+                        Text('PESEL',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600])),
+                        TextFormField(
+                            controller: _personalIdController,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800])),
+                        SizedBox(height: 10),
+                        Text('Birthdate',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600])),
+                        TextFormField(
+                            controller: _birthdateController,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800])),
+                        SizedBox(height: 20),
+                        Expanded(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: widget.medications.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                color: Colors.grey[100],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                ),
+                                child: ListTile(
+                                  leading: Icon(MaterialCommunityIcons.pill,
+                                      color: Colors.primaries[Random()
+                                          .nextInt(Colors.primaries.length)],
+                                      size: 50),
+                                  title: Text(widget.medications[index].name,
+                                      style:
+                                          TextStyle(color: Colors.grey[800])),
+                                  subtitle: Text(
+                                      'Amout: ${widget.medications[index].dosage.toString()} When: ${widget.medications[index].timing}',
+                                      style:
+                                          TextStyle(color: Colors.grey[600])),
+                                  trailing: Icon(Icons.keyboard_arrow_right,
+                                      color: Colors.grey[600]),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            DoctorMedicationDetailsScreen(
+                                          medication: widget.medications[index],
+                                          doctor: widget.doctor,
                                         ),
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
                           ),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-                                    iconSize: 42,
-                                    icon: Icon(Icons.delete, color: Colors.red),
-                                    onPressed: () async {
-                                      var patientDataAccess = DIContainer.getIt
-                                          .get<PatientDataAccess>();
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              IconButton(
+                                  iconSize: 42,
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () async {
+                                    var patientDataAccess = DIContainer.getIt
+                                        .get<PatientDataAccess>();
 
-                                      try {
-                                        await patientDataAccess
-                                            .deletePatientById(
-                                                widget.patient.personalId);
+                                    try {
+                                      await patientDataAccess.deletePatientById(
+                                          widget.patient.personalId);
 
-                                        Navigator.pop(context);
-                                      } catch (e) {
-                                        ErrorHandlingSnackbar.show(e, context);
-                                      }
-                                    }),
-                                IconButton(
-                                    iconSize: 42,
-                                    icon: Icon(Icons.save, color: Colors.blue),
-                                    onPressed: () async {
-                                      if (_firstNameController.text != null) {
-                                        widget.patient.firstName =
-                                            _firstNameController.text;
-                                      }
-                                      if (_lastNameController.text != null) {
-                                        widget.patient.lastName =
-                                            _lastNameController.text;
-                                      }
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      ErrorHandlingSnackbar.show(e, context,
+                                          scaffoldKey: _scaffoldKey);
+                                    }
+                                  }),
+                              IconButton(
+                                  iconSize: 42,
+                                  icon: Icon(Icons.save, color: Colors.blue),
+                                  onPressed: () async {
+                                    if (_firstNameController.text != null) {
+                                      widget.patient.firstName =
+                                          _firstNameController.text;
+                                    }
+                                    if (_lastNameController.text != null) {
+                                      widget.patient.lastName =
+                                          _lastNameController.text;
+                                    }
 
-                                      // TODO: To fix displaying
-                                      if (_birthdateController.text != null) {
-                                        widget.patient.birthdate =
-                                            _birthdateController.text;
-                                      }
+                                    // TODO: To fix displaying
+                                    if (_birthdateController.text != null) {
+                                      widget.patient.birthdate =
+                                          _birthdateController.text;
+                                    }
 
-                                      var patientDataAccess = DIContainer.getIt
-                                          .get<PatientDataAccess>();
+                                    var patientDataAccess = DIContainer.getIt
+                                        .get<PatientDataAccess>();
 
-                                      try {
-                                        await patientDataAccess
-                                            .editPatientData(widget.patient);
+                                    try {
+                                      await patientDataAccess
+                                          .editPatientData(widget.patient);
 
-                                        Navigator.pop(context);
-                                      } catch (e) {
-                                        ErrorHandlingSnackbar.show(e, context);
-                                      }
-                                    }),
-                              ])
-                        ],
-                      ),
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      ErrorHandlingSnackbar.show(e, context,
+                                          scaffoldKey: _scaffoldKey);
+                                    }
+                                  }),
+                            ])
+                      ],
                     ),
                   ),
                 ),

@@ -42,157 +42,159 @@ class _DoctorMedicationDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
+    final _scaffoldKey = GlobalKey<ScaffoldState>();
+
     return WillPopScope(
       onWillPop: () async => true,
       child: Scaffold(
-        body: Builder(
-          builder: (BuildContext context) => SafeArea(
-            child: SingleChildScrollView(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                color: Colors.grey[100],
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 32, horizontal: 256),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 128, vertical: 32),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                              child: Image.asset('assets/details.png',
-                                  height: MediaQuery.of(context).size.height *
-                                      0.25)),
-                          SizedBox(height: 10),
-                          Text(
-                            'Personal id',
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: Colors.grey[100],
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 32, horizontal: 256),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 128, vertical: 32),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                            child: Image.asset('assets/details.png',
+                                height:
+                                    MediaQuery.of(context).size.height * 0.25)),
+                        SizedBox(height: 10),
+                        Text(
+                          'Personal id',
+                          style:
+                              TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        ),
+                        Text(
+                          widget.medication.patientId.toString(),
+                          style:
+                              TextStyle(fontSize: 18, color: Colors.grey[800]),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          'Doctor name',
+                          style:
+                              TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        ),
+                        Text(
+                            '${widget.doctor.firstName} ${widget.doctor.lastName}',
                             style: TextStyle(
-                                fontSize: 16, color: Colors.grey[600]),
-                          ),
-                          Text(
-                            widget.medication.patientId.toString(),
+                                fontSize: 18, color: Colors.grey[800])),
+                        SizedBox(height: 10),
+                        Text('Name',
                             style: TextStyle(
-                                fontSize: 18, color: Colors.grey[800]),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            'Doctor name',
+                                fontSize: 16, color: Colors.grey[600])),
+                        TextFormField(
+                            controller: _nameController,
                             style: TextStyle(
-                                fontSize: 16, color: Colors.grey[600]),
-                          ),
-                          Text(
-                              '${widget.doctor.firstName} ${widget.doctor.lastName}',
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
-                          SizedBox(height: 10),
-                          Text('Name',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          TextFormField(
-                              controller: _nameController,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
-                          SizedBox(height: 10),
-                          Text('Start date',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          TextFormField(
-                              controller: _startDateController,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
-                          SizedBox(height: 10),
-                          Text('End date',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          TextFormField(
-                              controller: _endDateController,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
-                          SizedBox(height: 10),
-                          Text('Dosage',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          TextFormField(
-                              controller: _dosageController,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
-                          SizedBox(height: 10),
-                          Text('Timing',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
-                          TextFormField(
-                              controller: _timingController,
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey[800])),
-                          Spacer(),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-                                    iconSize: 42,
-                                    icon: Icon(Icons.delete, color: Colors.red),
-                                    onPressed: () async {
-                                      var medicationDataAccess = DIContainer
-                                          .getIt
-                                          .get<MedicationDataAccess>();
+                                fontSize: 18, color: Colors.grey[800])),
+                        SizedBox(height: 10),
+                        Text('Start date',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600])),
+                        TextFormField(
+                            controller: _startDateController,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800])),
+                        SizedBox(height: 10),
+                        Text('End date',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600])),
+                        TextFormField(
+                            controller: _endDateController,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800])),
+                        SizedBox(height: 10),
+                        Text('Dosage',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600])),
+                        TextFormField(
+                            controller: _dosageController,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800])),
+                        SizedBox(height: 10),
+                        Text('Timing',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[600])),
+                        TextFormField(
+                            controller: _timingController,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[800])),
+                        Spacer(),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              IconButton(
+                                  iconSize: 42,
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () async {
+                                    var medicationDataAccess = DIContainer.getIt
+                                        .get<MedicationDataAccess>();
 
-                                      try {
-                                        await medicationDataAccess
-                                            .deleteMedicationById(
-                                                widget.medication.id);
+                                    try {
+                                      await medicationDataAccess
+                                          .deleteMedicationById(
+                                              widget.medication.id);
 
-                                        Navigator.pop(context);
-                                      } catch (e) {
-                                        ErrorHandlingSnackbar.show(e, context);
-                                      }
-                                    }),
-                                IconButton(
-                                    iconSize: 42,
-                                    icon: Icon(Icons.save, color: Colors.blue),
-                                    onPressed: () async {
-                                      if (_nameController.text != null) {
-                                        widget.medication.name =
-                                            _nameController.text;
-                                      }
-                                      if (_startDateController.text != null) {
-                                        widget.medication.startDate =
-                                            _startDateController.text;
-                                      }
-                                      if (_endDateController.text != null) {
-                                        widget.medication.endDate =
-                                            _endDateController.text;
-                                      }
-                                      if (_dosageController.text != null) {
-                                        widget.medication.dosage =
-                                            int.parse(_dosageController.text);
-                                      }
-                                      if (_timingController.text != null) {
-                                        widget.medication.timing =
-                                            _timingController.text;
-                                      }
-                                      var medicationDataAccess = DIContainer
-                                          .getIt
-                                          .get<MedicationDataAccess>();
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      ErrorHandlingSnackbar.show(e, context,
+                                          scaffoldKey: _scaffoldKey);
+                                    }
+                                  }),
+                              IconButton(
+                                  iconSize: 42,
+                                  icon: Icon(Icons.save, color: Colors.blue),
+                                  onPressed: () async {
+                                    if (_nameController.text != null) {
+                                      widget.medication.name =
+                                          _nameController.text;
+                                    }
+                                    if (_startDateController.text != null) {
+                                      widget.medication.startDate =
+                                          _startDateController.text;
+                                    }
+                                    if (_endDateController.text != null) {
+                                      widget.medication.endDate =
+                                          _endDateController.text;
+                                    }
+                                    // TODO: Add validation beforehand
+                                    if (_dosageController.text
+                                        .contains(RegExp(r'^[0-9]+$'))) {
+                                      widget.medication.dosage =
+                                          int.parse(_dosageController.text);
+                                    }
+                                    if (_timingController.text != null) {
+                                      widget.medication.timing =
+                                          _timingController.text;
+                                    }
+                                    var medicationDataAccess = DIContainer.getIt
+                                        .get<MedicationDataAccess>();
 
-                                      try {
-                                        await medicationDataAccess
-                                            .editMedicationData(
-                                                widget.medication);
+                                    try {
+                                      await medicationDataAccess
+                                          .editMedicationData(
+                                              widget.medication);
 
-                                        Navigator.pop(context);
-                                      } catch (e) {
-                                        ErrorHandlingSnackbar.show(e, context);
-                                      }
-                                    }),
-                              ])
-                        ],
-                      ),
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      ErrorHandlingSnackbar.show(e, context,
+                                          scaffoldKey: _scaffoldKey);
+                                    }
+                                  }),
+                            ])
+                      ],
                     ),
                   ),
                 ),

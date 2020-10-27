@@ -8,14 +8,14 @@ part of 'medication.dart';
 
 Medication _$MedicationFromJson(Map<String, dynamic> json) {
   return Medication(
-    json['id'] as int,
-    json['patientId'] as int,
-    json['doctorId'] as int,
-    json['name'] as String,
-    json['startDate'] as String,
-    json['endDate'] as String,
-    json['dosage'] as int,
-    json['timing'] as String,
+    id: json['id'] as int,
+    patientId: json['patientId'] as int,
+    doctorId: json['doctorId'] as int,
+    name: json['name'] as String,
+    startDate: json['startDate'] as String,
+    endDate: json['endDate'] as String,
+    dosage: json['dosage'] as int,
+    timing: json['timing'] as String,
   );
 }
 
