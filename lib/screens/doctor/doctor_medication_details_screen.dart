@@ -42,6 +42,8 @@ class _DoctorMedicationDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
+    final _scaffoldKey = GlobalKey<ScaffoldState>();
+
     return WillPopScope(
       onWillPop: () async => true,
       child: Scaffold(
@@ -147,7 +149,8 @@ class _DoctorMedicationDetailsScreenState
 
                                       Navigator.pop(context);
                                     } catch (e) {
-                                      ErrorHandlingSnackbar.show(e, context);
+                                      ErrorHandlingSnackbar.show(e, context,
+                                          scaffoldKey: _scaffoldKey);
                                     }
                                   }),
                               IconButton(
@@ -166,7 +169,9 @@ class _DoctorMedicationDetailsScreenState
                                       widget.medication.endDate =
                                           _endDateController.text;
                                     }
-                                    if (_dosageController.text != null) {
+                                    // TODO: Add validation beforehand
+                                    if (_dosageController.text
+                                        .contains(RegExp(r'^[0-9]+$'))) {
                                       widget.medication.dosage =
                                           int.parse(_dosageController.text);
                                     }
@@ -184,7 +189,8 @@ class _DoctorMedicationDetailsScreenState
 
                                       Navigator.pop(context);
                                     } catch (e) {
-                                      ErrorHandlingSnackbar.show(e, context);
+                                      ErrorHandlingSnackbar.show(e, context,
+                                          scaffoldKey: _scaffoldKey);
                                     }
                                   }),
                             ])

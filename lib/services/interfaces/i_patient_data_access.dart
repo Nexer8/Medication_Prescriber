@@ -5,9 +5,9 @@ abstract class IPatientDataAccess {
 
   Future<List<Patient>> getPatients();
 
-  Future<Patient> createPatient(Patient patient);
+  Future<void> createPatient(Patient patient);
 
-  Future<Patient> editPatientData(Patient patient);
+  Future<void> editPatientData(Patient patient);
 
   Future<void> deletePatientById(int patientId);
 

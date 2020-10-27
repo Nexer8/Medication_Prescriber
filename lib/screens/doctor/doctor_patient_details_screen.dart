@@ -55,16 +55,19 @@ class _DoctorPatientDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
+    final _scaffoldKey = GlobalKey<ScaffoldState>();
+
     return WillPopScope(
       onWillPop: () async => true,
       child: Scaffold(
+        key: _scaffoldKey,
         floatingActionButton: FloatingActionButton(
           tooltip: 'Add new medicine',
           child: Icon(Icons.add),
-          onPressed: () {
+          onPressed: () async {
             showDialog(
               context: context,
-              builder: (_) => SimpleDialog(
+              builder: (context) => SimpleDialog(
                 contentPadding: EdgeInsets.all(16.0),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25.0))),
@@ -141,7 +144,7 @@ class _DoctorPatientDetailsScreenState
                           SizedBox(height: 30),
                           TextField(
                             controller: _dosageController,
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.number,
                             cursorColor: Colors.green,
                             decoration: InputDecoration(
                               contentPadding:
@@ -197,19 +200,19 @@ class _DoctorPatientDetailsScreenState
                                   iconSize: 42,
                                   onPressed: () async {
                                     try {
-                                      Medication medication;
-                                      medication.doctorId = widget.doctor.id;
-                                      medication.patientId =
-                                          widget.patient.personalId;
-                                      medication.timing =
-                                          _timingController.text;
-                                      medication.dosage =
-                                          int.parse(_dosageController.text);
-                                      medication.name = _nameController.text;
-                                      medication.startDate =
-                                          _startDateController.text;
-                                      medication.endDate =
-                                          _endDateController.text;
+                                      var medication = Medication(
+                                          id: 0,
+                                          doctorId: widget.doctor.id,
+                                          patientId: widget.patient.personalId,
+                                          timing: _timingController.text,
+                                          dosage: _dosageController.text
+                                                  .contains(RegExp(r'^[0-9]+$'))
+                                              ? int.parse(
+                                                  _dosageController.text)
+                                              : 0,
+                                          name: _nameController.text,
+                                          startDate: _startDateController.text,
+                                          endDate: _endDateController.text);
 
                                       var medicationDataAccess = DIContainer
                                           .getIt
@@ -220,7 +223,8 @@ class _DoctorPatientDetailsScreenState
                                       //Create object and add to database
                                       Navigator.pop(context);
                                     } catch (e) {
-                                      ErrorHandlingSnackbar.show(e, context);
+                                      ErrorHandlingSnackbar.show(e, context,
+                                          scaffoldKey: _scaffoldKey);
                                     }
                                   }),
                             ],
@@ -347,7 +351,8 @@ class _DoctorPatientDetailsScreenState
 
                                       Navigator.pop(context);
                                     } catch (e) {
-                                      ErrorHandlingSnackbar.show(e, context);
+                                      ErrorHandlingSnackbar.show(e, context,
+                                          scaffoldKey: _scaffoldKey);
                                     }
                                   }),
                               IconButton(
@@ -362,12 +367,9 @@ class _DoctorPatientDetailsScreenState
                                       widget.patient.lastName =
                                           _lastNameController.text;
                                     }
-                                    if (_personalIdController.text != null) {
-                                      widget.patient.personalId =
-                                          int.parse(_personalIdController.text);
-                                    }
+
                                     // TODO: To fix displaying
-                                    if (_birthdateController != null) {
+                                    if (_birthdateController.text != null) {
                                       widget.patient.birthdate =
                                           _birthdateController.text;
                                     }
@@ -381,7 +383,8 @@ class _DoctorPatientDetailsScreenState
 
                                       Navigator.pop(context);
                                     } catch (e) {
-                                      ErrorHandlingSnackbar.show(e, context);
+                                      ErrorHandlingSnackbar.show(e, context,
+                                          scaffoldKey: _scaffoldKey);
                                     }
                                   }),
                             ])

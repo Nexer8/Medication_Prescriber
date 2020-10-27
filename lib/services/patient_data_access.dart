@@ -11,7 +11,7 @@ class PatientDataAccess implements IPatientDataAccess {
   static final String patientsUrl = apiUrl + patientsEndpoint;
 
   @override
-  Future<Patient> createPatient(Patient patient) async {
+  Future<void> createPatient(Patient patient) async {
     http.Response response = await http.post(
       patientsUrl,
       headers: {
@@ -26,14 +26,10 @@ class PatientDataAccess implements IPatientDataAccess {
     if (response.statusCode != 200) {
       throw HttpException(response.statusCode);
     }
-
-    Patient createdPatient = Patient.fromJson(json.decode(response.body));
-
-    return createdPatient;
   }
 
   @override
-  Future<Patient> editPatientData(Patient patient) async {
+  Future<void> editPatientData(Patient patient) async {
     String urlToPut = patientsUrl + '/${patient.personalId.toString()}';
 
     http.Response response = await http.put(
@@ -50,10 +46,6 @@ class PatientDataAccess implements IPatientDataAccess {
     if (response.statusCode != 200) {
       throw HttpException(response.statusCode);
     }
-
-    Patient editedPatient = Patient.fromJson(json.decode(response.body));
-
-    return editedPatient;
   }
 
   @override

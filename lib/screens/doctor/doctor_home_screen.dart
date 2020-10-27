@@ -32,7 +32,10 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _scaffoldKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
+      key: _scaffoldKey,
       floatingActionButton: FloatingActionButton(
         tooltip: 'Add new patient',
         child: Icon(Icons.add),
@@ -153,15 +156,15 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                                   iconSize: 42,
                                   onPressed: () async {
                                     try {
-                                      Patient patient;
-                                      patient.personalId =
-                                          int.parse(_personalIdController.text);
-                                      patient.firstName =
-                                          _firstNameController.text;
-                                      patient.lastName =
-                                          _firstNameController.text;
-                                      patient.birthdate =
-                                          _birthdateController.text;
+                                      var patient = Patient(
+                                          personalId: _personalIdController.text
+                                                  .contains(RegExp(r'^[0-9]+$'))
+                                              ? int.parse(
+                                                  _personalIdController.text)
+                                              : null,
+                                          firstName: _firstNameController.text,
+                                          lastName: _lastNameController.text,
+                                          birthdate: _birthdateController.text);
 
                                       var patientDataAccess = DIContainer.getIt
                                           .get<PatientDataAccess>();
@@ -171,7 +174,8 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
 
                                       Navigator.pop(context);
                                     } catch (e) {
-                                      ErrorHandlingSnackbar.show(e, context);
+                                      ErrorHandlingSnackbar.show(e, context,
+                                          scaffoldKey: _scaffoldKey);
                                     }
                                   }),
                             ],
@@ -305,23 +309,30 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                                               .getIt
                                               .get<MedicationDataAccess>();
 
-                                          List<Medication> medications =
-                                              await medicationDataAccess
-                                                  .getMedicationsByPatientId(
-                                                      widget.patients[index]
-                                                          .personalId);
+                                          try {
+                                            List<Medication> medications =
+                                                await medicationDataAccess
+                                                    .getMedicationsByPatientId(
+                                                        widget.patients[index]
+                                                            .personalId);
 
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DoctorPatientDetailsScreen(
-                                                patient: widget.patients[index],
-                                                medications: medications,
-                                                doctor: widget.doctor,
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DoctorPatientDetailsScreen(
+                                                  patient:
+                                                      widget.patients[index],
+                                                  medications: medications,
+                                                  doctor: widget.doctor,
+                                                ),
                                               ),
-                                            ),
-                                          );
+                                            );
+                                          } catch (e) {
+                                            ErrorHandlingSnackbar.show(
+                                                e, context,
+                                                scaffoldKey: _scaffoldKey);
+                                          }
                                         }),
                                   );
                                 }),

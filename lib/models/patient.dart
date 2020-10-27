@@ -9,7 +9,7 @@ class Patient {
   String firstName;
   String lastName;
 
-  Patient(this.personalId, this.firstName, this.lastName, this.birthdate);
+  Patient({this.personalId, this.firstName, this.lastName, this.birthdate});
 
   factory Patient.fromJson(Map<String, dynamic> json) =>
       _$PatientFromJson(json);

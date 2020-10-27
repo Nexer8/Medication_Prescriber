@@ -5,9 +5,9 @@ abstract class IMedicationDataAccess {
 
   Future<List<Medication>> getMedications();
 
-  Future<Medication> createMedication(Medication medication);
+  Future<void> createMedication(Medication medication);
 
-  Future<Medication> editMedicationData(Medication medication);
+  Future<void> editMedicationData(Medication medication);
 
   Future<List<Medication>> getMedicationsByPatientId(int patientId);
 

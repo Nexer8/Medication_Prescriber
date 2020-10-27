@@ -4,8 +4,16 @@ import 'package:flutter/material.dart';
 class ErrorHandlingSnackbar {
   static const displayDuration = Duration(seconds: 4);
 
-  static void show(Exception e, BuildContext context) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+  static void show(Exception e, BuildContext context,
+      {GlobalKey<ScaffoldState> scaffoldKey}) {
+    ScaffoldState scaffoldState;
+    if (scaffoldKey != null) {
+      scaffoldState = scaffoldKey.currentState;
+    } else {
+      scaffoldState = Scaffold.of(context);
+    }
+
+    scaffoldState.showSnackBar(SnackBar(
       duration: displayDuration,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
