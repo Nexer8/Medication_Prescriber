@@ -6,6 +6,7 @@ import 'package:ptsiim/models/patient.dart';
 import 'package:ptsiim/services/doctor_data_access.dart';
 import 'package:ptsiim/services/patient_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
+import 'package:ptsiim/utils/input_validators.dart';
 
 import 'doctor_home_screen.dart';
 
@@ -49,12 +50,7 @@ class DoctorWelcomeScreen extends StatelessWidget {
                         width: 550,
                         child: TextFormField(
                           controller: _idController,
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter ID';
-                            }
-                            return null;
-                          },
+                          validator: validatePersonalId,
                           keyboardType: TextInputType.number,
                           cursorColor: Colors.green[300],
                           decoration: InputDecoration(

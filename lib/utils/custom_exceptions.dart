@@ -5,7 +5,7 @@ class HttpException implements Exception {
   HttpException(this.statusCode) {
     switch (statusCode) {
       case 400:
-        message = 'Invalid login credentials!';
+        message = 'Invalid input!';
         break;
       case 404:
         message = 'Item does not exist!';
