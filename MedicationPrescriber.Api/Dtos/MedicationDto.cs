@@ -35,7 +35,7 @@ namespace MedicationPrescriber.Api.Dtos
             RuleFor(x => x.EndDate).NotEmpty();
             RuleFor(x => x.Timing).NotEmpty();
             RuleFor(x => x.Dosage).GreaterThan(0);
-            RuleFor(x => x.EndDate).GreaterThan(x => x.StartDate);
+            RuleFor(x => x.EndDate).GreaterThanOrEqualTo(x => x.StartDate);
             RuleFor(x => x.Timing).Must(x => Tools.IsTimingDefinedByValue(x))
                     .WithMessage(x => $"{x.Timing} is not a valid timing, choose from: {Tools.GetValuesOfTiming()}");
         }

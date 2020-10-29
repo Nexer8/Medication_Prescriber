@@ -25,9 +25,17 @@ namespace MedicationPrescriber.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> GetAsync([FromQuery] int? doctorId)
         {
             var patientsEntitiesList = await _context.Patients.Include(x => x.User).ToListAsync();
+            if(doctorId.HasValue)
+            {
+                patientsEntitiesList = await _context.Medications
+                    .Include(x => x.Patient)
+                    .Where(x => x.DoctorId == doctorId)
+                    .Select(x =>x.Patient).ToListAsync();
+            }
+
             return Ok(_mapper.Map<List<PatientDto>>(patientsEntitiesList));
         }
 
@@ -44,14 +52,14 @@ namespace MedicationPrescriber.Api.Controllers
             return Ok(_mapper.Map<PatientDto>(patientEntity));
         }
 
-        
+
         [HttpPost]
         public async Task<IActionResult> PostAsync(PatientDto patientDto)
         {
-            if(_context.Patients.Any(x => x.PersonalId == patientDto.PersonalId))
+            if (_context.Patients.Any(x => x.PersonalId == patientDto.PersonalId))
             {
                 return BadRequest($"User with personalId: {patientDto.PersonalId} already exists");
-            }    
+            }
 
             var user = new User
             {
@@ -69,7 +77,7 @@ namespace MedicationPrescriber.Api.Controllers
             return Ok(patientDto);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> PutAsync(int id, UpdatePatientDto patientDto)
         {
             var patient = await _context.Patients.Include(x => x.User).FirstOrDefaultAsync(x => x.PersonalId == id);

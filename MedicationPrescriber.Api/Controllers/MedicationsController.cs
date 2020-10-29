@@ -26,10 +26,10 @@ namespace MedicationPrescriber.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> GetAsync(DateTime? date)
         {
-            var medicationEntitiesList = await _context.Medications.ToListAsync();
-            return Ok(_mapper.Map<List<MedicationDto>>(medicationEntitiesList));
+            var query = await _context.Medications.FilterByDateIfNeeded(date).ToListAsync();
+            return Ok(_mapper.Map<List<MedicationDto>>(query));
         }
          
         [HttpGet("{id}")]
@@ -46,20 +46,23 @@ namespace MedicationPrescriber.Api.Controllers
         }
 
         [HttpGet("patient/{patientId}")]
-        public async Task<IActionResult> GeByUserIdAsync(int patientId)
+        public async Task<IActionResult> GeByUserIdAsync(int patientId, DateTime? date)
         {
             var medication = await _context.Medications
                 .Where(x => x.PatientId == patientId)
+                .FilterByDateIfNeeded(date)
                 .OrderByDescending(x => x.StartDate)
                 .ToListAsync();
+
             return Ok(_mapper.Map<List<MedicationDto>>(medication));
         }
 
         [HttpGet("doctor/{doctorId}")]
-        public async Task<IActionResult> GeByDoctorIdAsync(int doctorId)
+        public async Task<IActionResult> GeByDoctorIdAsync(int doctorId, DateTime? date)
         {
             var medication = await _context.Medications
                 .Where(x => x.DoctorId == doctorId)
+                .FilterByDateIfNeeded(date)
                 .OrderByDescending(x => x.StartDate)
                 .ToListAsync();
             return Ok(_mapper.Map<List<MedicationDto>>(medication));
@@ -87,7 +90,7 @@ namespace MedicationPrescriber.Api.Controllers
             return Ok(medicationdto);
         }
 
-        [HttpPut("id")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> PostAsync(int id, MedicationDto medicationdto)
         {
             var medication = await _context.Medications.FirstOrDefaultAsync(x => x.Id == id);
@@ -131,5 +134,6 @@ namespace MedicationPrescriber.Api.Controllers
 
             return Ok();
         }
+
     }
 }

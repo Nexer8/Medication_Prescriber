@@ -38,12 +38,20 @@ namespace MedicationPrescriber
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+           // app.UseMvc();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

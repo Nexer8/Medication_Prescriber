@@ -69,7 +69,6 @@ namespace MedicationPrescriber.Api.Controllers
             return Ok(_mapper.Map<DoctorDto>(doctorToDelete));
         }
 
-
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {

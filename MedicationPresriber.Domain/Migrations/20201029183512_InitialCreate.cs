@@ -45,7 +45,7 @@ namespace MedicationPresriber.Domain.Migrations
                 name: "Patients",
                 columns: table => new
                 {
-                    PersonalId = table.Column<int>(nullable: false),
+                    PersonalId = table.Column<long>(nullable: false),
                     Birthdate = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<int>(nullable: false)
                 },
@@ -72,7 +72,8 @@ namespace MedicationPresriber.Domain.Migrations
                     StartDate = table.Column<DateTime>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: false),
                     Dosage = table.Column<int>(nullable: false),
-                    Timing = table.Column<string>(nullable: false)
+                    Timing = table.Column<string>(nullable: false),
+                    PatientPersonalId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -84,8 +85,8 @@ namespace MedicationPresriber.Domain.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Medications_Patients_PatientId",
-                        column: x => x.PatientId,
+                        name: "FK_Medications_Patients_PatientPersonalId",
+                        column: x => x.PatientPersonalId,
                         principalTable: "Patients",
                         principalColumn: "PersonalId",
                         onDelete: ReferentialAction.Cascade);
@@ -102,9 +103,9 @@ namespace MedicationPresriber.Domain.Migrations
                 column: "DoctorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Medications_PatientId",
+                name: "IX_Medications_PatientPersonalId",
                 table: "Medications",
-                column: "PatientId");
+                column: "PatientPersonalId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Patients_UserId",

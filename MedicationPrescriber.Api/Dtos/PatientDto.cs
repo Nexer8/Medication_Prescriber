@@ -5,7 +5,7 @@ namespace MedicationPrescriber.Api.Dtos
 {
     public class PatientDto
     {
-        public int PersonalId { get; set; }
+        public long PersonalId { get; set; }
 
         public DateTime Birthdate { get; set; }
 

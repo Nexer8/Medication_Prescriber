@@ -7,7 +7,7 @@ namespace MedicationPresriber.Domain.Models
     public class Patient
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int PersonalId { get; set; }
+        public long PersonalId { get; set; }
 
         public DateTime Birthdate { get; set; }
 

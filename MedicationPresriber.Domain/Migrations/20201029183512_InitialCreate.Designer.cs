@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicationPresriber.Domain.Migrations
 {
     [DbContext(typeof(MedicationPresriberDbContext))]
-    [Migration("20201021212836_InitialCreate")]
+    [Migration("20201029183512_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,6 +65,9 @@ namespace MedicationPresriber.Domain.Migrations
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
+                    b.Property<long?>("PatientPersonalId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -76,15 +79,15 @@ namespace MedicationPresriber.Domain.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.HasIndex("PatientId");
+                    b.HasIndex("PatientPersonalId");
 
                     b.ToTable("Medications");
                 });
 
             modelBuilder.Entity("MedicationPresriber.Domain.Models.Patient", b =>
                 {
-                    b.Property<int>("PersonalId")
-                        .HasColumnType("int");
+                    b.Property<long>("PersonalId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("Birthdate")
                         .HasColumnType("datetime2");
@@ -138,9 +141,8 @@ namespace MedicationPresriber.Domain.Migrations
 
                     b.HasOne("MedicationPresriber.Domain.Models.Patient", "Patient")
                         .WithMany("Medications")
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PatientPersonalId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MedicationPresriber.Domain.Models.Patient", b =>
