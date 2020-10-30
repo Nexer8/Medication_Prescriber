@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicationPresriber.Domain.Migrations
 {
     [DbContext(typeof(MedicationPresriberDbContext))]
-    [Migration("20201029183512_InitialCreate")]
+    [Migration("20201030172959_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,10 +62,7 @@ namespace MedicationPresriber.Domain.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("PatientPersonalId")
+                    b.Property<long>("PatientId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("StartDate")
@@ -79,7 +76,7 @@ namespace MedicationPresriber.Domain.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.HasIndex("PatientPersonalId");
+                    b.HasIndex("PatientId");
 
                     b.ToTable("Medications");
                 });
@@ -141,8 +138,9 @@ namespace MedicationPresriber.Domain.Migrations
 
                     b.HasOne("MedicationPresriber.Domain.Models.Patient", "Patient")
                         .WithMany("Medications")
-                        .HasForeignKey("PatientPersonalId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MedicationPresriber.Domain.Models.Patient", b =>

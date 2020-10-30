@@ -66,14 +66,13 @@ namespace MedicationPresriber.Domain.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PatientId = table.Column<int>(nullable: false),
+                    PatientId = table.Column<long>(nullable: false),
                     DoctorId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     StartDate = table.Column<DateTime>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: false),
                     Dosage = table.Column<int>(nullable: false),
-                    Timing = table.Column<string>(nullable: false),
-                    PatientPersonalId = table.Column<long>(nullable: true)
+                    Timing = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,8 +84,8 @@ namespace MedicationPresriber.Domain.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Medications_Patients_PatientPersonalId",
-                        column: x => x.PatientPersonalId,
+                        name: "FK_Medications_Patients_PatientId",
+                        column: x => x.PatientId,
                         principalTable: "Patients",
                         principalColumn: "PersonalId",
                         onDelete: ReferentialAction.Cascade);
@@ -103,9 +102,9 @@ namespace MedicationPresriber.Domain.Migrations
                 column: "DoctorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Medications_PatientPersonalId",
+                name: "IX_Medications_PatientId",
                 table: "Medications",
-                column: "PatientPersonalId");
+                column: "PatientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Patients_UserId",

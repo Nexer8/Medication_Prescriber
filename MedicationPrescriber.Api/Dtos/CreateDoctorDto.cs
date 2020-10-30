@@ -2,19 +2,17 @@
 
 namespace MedicationPrescriber.Api.Dtos
 {
-    public class DoctorDto
+    public class CreateDoctorDto
     {
-        public int? Id { get; set; }
-
         public string Specialization { get; set; }
 
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
 
-        public class DoctorDtoValidator : AbstractValidator<DoctorDto>
+        public class CreateDoctorDtoValidator : AbstractValidator<CreateDoctorDto>
         {
-            public DoctorDtoValidator()
+            public CreateDoctorDtoValidator()
             {
                 RuleFor(x => x.FirstName).NotEmpty();
                 RuleFor(x => x.LastName).NotEmpty();

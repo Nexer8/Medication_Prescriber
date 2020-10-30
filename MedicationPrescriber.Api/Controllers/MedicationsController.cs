@@ -46,7 +46,7 @@ namespace MedicationPrescriber.Api.Controllers
         }
 
         [HttpGet("patient/{patientId}")]
-        public async Task<IActionResult> GeByUserIdAsync(int patientId, DateTime? date)
+        public async Task<IActionResult> GeByUserIdAsync(long patientId, DateTime? date)
         {
             var medication = await _context.Medications
                 .Where(x => x.PatientId == patientId)
@@ -70,7 +70,7 @@ namespace MedicationPrescriber.Api.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(MedicationDto medicationdto)
+        public async Task<IActionResult> PostAsync(CreateMedicationDto medicationdto)
         {
             if(!_context.Doctors.Any(x => x.Id == medicationdto.DoctorId))
             {
@@ -85,9 +85,7 @@ namespace MedicationPrescriber.Api.Controllers
             var medicationEntity = _mapper.Map<Medication>(medicationdto);
             _context.Medications.Add(medicationEntity);
             await _context.SaveChangesAsync();
-
-            medicationdto.Id = medicationEntity.Id;
-            return Ok(medicationdto);
+            return Ok(_mapper.Map<MedicationDto>(medicationEntity));
         }
 
         [HttpPut("{id}")]

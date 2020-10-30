@@ -9,6 +9,7 @@ namespace MedicationPrescriber.Api.Mapper
         public MappingProfile()
         {
             CreateMap<DoctorDto, Doctor>();
+            CreateMap<CreateDoctorDto, Doctor>();
             CreateMap<Doctor, DoctorDto>()
                 .ForMember(src => src.FirstName, dst => dst.MapFrom(x => x.User.FirstName))
                 .ForMember(src => src.LastName, dst => dst.MapFrom(x => x.User.LastName));
@@ -25,6 +26,7 @@ namespace MedicationPrescriber.Api.Mapper
                 .ForMember(src => src.LastName, dst => dst.MapFrom(x => x.User.LastName));
 
             CreateMap<MedicationDto, Medication>();
+            CreateMap<CreateMedicationDto, Medication>();
             CreateMap<Medication, MedicationDto>();
         }
     }

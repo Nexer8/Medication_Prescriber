@@ -24,7 +24,7 @@ namespace MedicationPrescriber.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(DoctorDto doctorDto)
+        public async Task<IActionResult> PostAsync(CreateDoctorDto doctorDto)
         {
             var user = new User
             {
@@ -39,8 +39,7 @@ namespace MedicationPrescriber.Api.Controllers
             await _context.AddAsync(doctorEntity);
 
             await _context.SaveChangesAsync();
-            doctorDto.Id = doctorEntity.Id;
-            return Ok(doctorDto);
+            return Ok(_mapper.Map<DoctorDto>(doctorEntity));
         }
 
         [HttpDelete("{id}")]

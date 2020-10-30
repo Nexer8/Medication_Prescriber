@@ -3,10 +3,8 @@ using System;
 
 namespace MedicationPrescriber.Api.Dtos
 {
-    public class MedicationDto
+    public class CreateMedicationDto
     {
-        public int? Id { get; set; }
-
         public int PatientId { get; set; }
 
         public int DoctorId { get; set; }
@@ -22,9 +20,9 @@ namespace MedicationPrescriber.Api.Dtos
         public string Timing { get; set; }
     }
 
-    public class MedicationDtoValidator : AbstractValidator<MedicationDto>
+    public class CreateMedicationDtoValidator : AbstractValidator<CreateMedicationDto>
     {
-        public MedicationDtoValidator()
+        public CreateMedicationDtoValidator()
         {
             RuleFor(x => x.Name).NotEmpty();
             RuleFor(x => x.StartDate).NotEmpty();

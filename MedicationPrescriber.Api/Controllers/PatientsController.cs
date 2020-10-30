@@ -40,7 +40,7 @@ namespace MedicationPrescriber.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetByIdAsync(long id)
         {
             var patientEntity = await _context.Patients.Include(x => x.User).FirstOrDefaultAsync(x => x.PersonalId == id);
 
@@ -78,7 +78,7 @@ namespace MedicationPrescriber.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync(int id, UpdatePatientDto patientDto)
+        public async Task<IActionResult> PutAsync(long id, UpdatePatientDto patientDto)
         {
             var patient = await _context.Patients.Include(x => x.User).FirstOrDefaultAsync(x => x.PersonalId == id);
             if (patient == null)
@@ -99,7 +99,7 @@ namespace MedicationPrescriber.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteAsync(long id)
         {
             var patient = await _context.Patients.FirstOrDefaultAsync(x => x.PersonalId == id);
             if (patient == null)
