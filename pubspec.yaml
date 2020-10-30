@@ -33,6 +33,7 @@ dependencies:
   analyzer:  ^0.40.4
   http: ^0.12.2
   enum_to_string: ^1.0.13
+  recase: ^3.0.0
   get_it: ^5.0.1
 
 dev_dependencies:

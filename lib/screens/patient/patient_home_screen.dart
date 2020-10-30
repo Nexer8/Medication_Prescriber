@@ -17,8 +17,7 @@ class PatientHomeScreen extends StatefulWidget {
   final Patient patient;
   final List<Medication> medications;
 
-  const PatientHomeScreen({Key key, this.patient, this.medications})
-      : super(key: key);
+  PatientHomeScreen({@required this.patient, @required this.medications});
 
   @override
   _PatientHomeScreenState createState() => _PatientHomeScreenState();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
+import 'package:ptsiim/components/id_textformfield.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/patient.dart';
 import 'package:ptsiim/services/doctor_data_access.dart';
@@ -48,27 +49,9 @@ class DoctorWelcomeScreen extends StatelessWidget {
                       SizedBox(height: 30),
                       Container(
                         width: 550,
-                        child: TextFormField(
-                          controller: _idController,
-                          validator: validatePersonalId,
-                          keyboardType: TextInputType.number,
-                          cursorColor: Colors.green[300],
-                          decoration: InputDecoration(
-                            contentPadding:
-                                EdgeInsets.fromLTRB(24.0, 2.0, 2.0, 0.0),
-                            filled: true,
-                            fillColor: Colors.grey[100],
-                            focusColor: Colors.grey[100],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            hintStyle: TextStyle(
-                              color: Colors.grey[800],
-                            ),
-                            hintText: "Please enter your doctor ID",
-                          ),
-                        ),
+                        child: IdTextFormField(
+                            controller: _idController,
+                            validator: validateDoctorId),
                       ),
                       SizedBox(height: 20),
                       RaisedButton(

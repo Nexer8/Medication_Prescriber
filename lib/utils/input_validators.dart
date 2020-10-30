@@ -15,11 +15,26 @@ String validatePersonalId(String value) {
     return 'Please enter numeric value.';
   }
 
+  //TODO: change to 11 - 64 bit (now 32)
+  if (value.length != 9) {
+    return "Personal id length must be 11 digits";
+  }
+
   if (value.contains(RegExp(r'^[0-9]+$'))) {
     return null;
-  } else {
+  } else
     return 'Invalid input!';
+}
+
+String validateDoctorId(String value) {
+  if (value.isEmpty) {
+    return 'Please enter numeric value.';
   }
+
+  if (value.contains(RegExp(r'^[0-9]+$'))) {
+    return null;
+  } else
+    return 'Invalid input!';
 }
 
 String validateDosage(String value) {

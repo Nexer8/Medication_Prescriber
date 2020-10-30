@@ -1,79 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
+import 'package:ptsiim/components/id_textformfield.dart';
 import 'package:ptsiim/models/medication.dart';
 import 'package:ptsiim/models/patient.dart';
 import 'package:ptsiim/services/medication_data_access.dart';
 import 'package:ptsiim/services/patient_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
+import 'package:ptsiim/utils/input_validators.dart';
 
 import 'patient_home_screen.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
-class PatientWelcomeScreen extends StatelessWidget {
+class PatientWelcomeScreen extends StatefulWidget {
+  @override
+  _PatientWelcomeScreenState createState() => _PatientWelcomeScreenState();
+}
+
+class _PatientWelcomeScreenState extends State<PatientWelcomeScreen> {
   final _formKey = GlobalKey<FormState>();
   final _idController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Builder(
-        builder: (BuildContext context) => SafeArea(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.green,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Center(
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          color: Colors.green,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Center(
+              child: Form(
+                key: _formKey,
                 child: SingleChildScrollView(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Medication prescriber ',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.grey[100],
-                              fontSize: 48,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 20),
-                        Icon(
-                          FlutterIcons.capsules_faw5s,
-                          color: Colors.grey[100],
-                          size: 220,
-                        ),
-                        SizedBox(height: 30),
-                        TextFormField(
+                  child: Column(
+                    children: [
+                      Text(
+                        'Medication prescriber ',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.grey[100],
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 20),
+                      Icon(
+                        FlutterIcons.capsules_faw5s,
+                        color: Colors.grey[100],
+                        size: 220,
+                      ),
+                      SizedBox(height: 30),
+                      IdTextFormField(
                           controller: _idController,
-                          keyboardType: TextInputType.number,
-                          cursorColor: Colors.green,
-                          decoration: InputDecoration(
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 24.0),
-                            filled: true,
-                            fillColor: Colors.grey[100],
-                            focusColor: Colors.grey[100],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            hintStyle: TextStyle(
-                              color: Colors.grey[800],
-                            ),
-                            hintText: "Please enter your PESEL",
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty)
-                              return 'Please enter personal ID';
-                            if (value.length < 9)
-                              return 'Personal ID is too short';
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: 20),
-                        RaisedButton(
+                          validator: validatePersonalId),
+                      SizedBox(height: 20),
+                      Builder(
+                        builder: (context) => RaisedButton(
                             color: Colors.grey[100],
                             textColor: Colors.grey[800],
                             child: Text(
@@ -115,8 +98,8 @@ class PatientWelcomeScreen extends StatelessWidget {
                                 }
                               }
                             }),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
