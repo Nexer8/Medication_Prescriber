@@ -13,12 +13,19 @@ class DetailText extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey[600],
+          ),
         ),
         Text(
           data,
-          style: TextStyle(fontSize: 18, color: Colors.grey[800]),
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.grey[800],
+          ),
         ),
+        SizedBox(height: 12),
       ],
     );
   }

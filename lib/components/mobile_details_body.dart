@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class DetailsBody extends StatelessWidget {
-  DetailsBody({@required this.column});
+  DetailsBody({@required this.content});
 
-  final Column column;
+  final Column content;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,11 @@ class DetailsBody extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconButton(
-                      icon: Icon(Icons.keyboard_arrow_left, size: 28),
+                      icon: Icon(
+                        Icons.keyboard_arrow_left,
+                        color: Colors.grey[800],
+                        size: 28,
+                      ),
                       onPressed: () {
                         Navigator.pop(context);
                       }),
@@ -31,7 +35,7 @@ class DetailsBody extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(32.0),
-                      child: column,
+                      child: content,
                     ),
                   ),
                 ],

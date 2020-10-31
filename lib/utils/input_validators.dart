@@ -15,8 +15,7 @@ String validatePersonalId(String value) {
     return 'Please enter numeric value.';
   }
 
-  //TODO: change to 11 - 64 bit (now 32)
-  if (value.length != 9) {
+  if (value.length != 11) {
     return "Personal id length must be 11 digits";
   }
 

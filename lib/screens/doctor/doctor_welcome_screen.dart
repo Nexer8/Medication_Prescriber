@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
-import 'package:ptsiim/components/id_textformfield.dart';
+import 'package:ptsiim/components/id_text_form_field.dart';
+import 'package:ptsiim/components/login_raised_button.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/patient.dart';
 import 'package:ptsiim/services/doctor_data_access.dart';
@@ -18,52 +19,52 @@ class DoctorWelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Builder(
-        builder: (BuildContext context) => SafeArea(
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
           child: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             color: Colors.green,
             child: Center(
               child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      Text('Medication prescriber',
-                          style: TextStyle(
-                              color: Colors.grey[100],
-                              fontSize: 80,
-                              fontWeight: FontWeight.bold)),
-                      Text('System management for doctors',
-                          style: TextStyle(
-                              color: Colors.grey[100],
-                              fontSize: 42,
-                              fontWeight: FontWeight.bold)),
-                      SizedBox(height: 20),
-                      Icon(
-                        FlutterIcons.capsules_faw5s,
+                child: Column(
+                  children: [
+                    Text(
+                      'Medication prescriber',
+                      style: TextStyle(
                         color: Colors.grey[100],
-                        size: 350,
+                        fontSize: 80,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(height: 30),
-                      Container(
-                        width: 550,
-                        child: IdTextFormField(
-                            controller: _idController,
-                            validator: validateDoctorId),
-                      ),
-                      SizedBox(height: 20),
-                      RaisedButton(
+                    ),
+                    Text(
+                      'System management for doctors',
+                      style: TextStyle(
                         color: Colors.grey[100],
-                        textColor: Colors.grey[800],
-                        child: Text(
-                          'Login'.toUpperCase(),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          side: BorderSide.none,
-                        ),
+                        fontSize: 42,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Icon(
+                      FlutterIcons.capsules_faw5s,
+                      color: Colors.grey[100],
+                      size: 350,
+                    ),
+                    SizedBox(height: 30),
+                    Container(
+                      width: 550,
+                      child: IdTextFormField(
+                        controller: _idController,
+                        validator: validateDoctorId,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Builder(
+                      builder: (context) => LoginRaisedButton(
+                        formKey: _formKey,
+                        controller: _idController,
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
                             var doctorDataAccess =
@@ -94,8 +95,8 @@ class DoctorWelcomeScreen extends StatelessWidget {
                           }
                         },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

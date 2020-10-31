@@ -41,28 +41,36 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                        icon: Icon(Icons.logout,
-                            color: Colors.grey[800], size: 28),
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PatientWelcomeScreen(),
-                            ),
-                          );
-                        }),
+                      icon: Icon(
+                        Icons.logout,
+                        color: Colors.grey[800],
+                        size: 28,
+                      ),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PatientWelcomeScreen(),
+                          ),
+                        );
+                      },
+                    ),
                     IconButton(
-                        icon: Icon(Icons.account_circle_rounded,
-                            color: Colors.grey[800], size: 28),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  PatientProfileScreen(patient: widget.patient),
-                            ),
-                          );
-                        }),
+                      icon: Icon(
+                        Icons.account_circle_rounded,
+                        color: Colors.grey[800],
+                        size: 28,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                PatientProfileScreen(patient: widget.patient),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
                 Container(
@@ -81,19 +89,25 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                           Text(
                             'Hello,\n${widget.patient.firstName}!',
                             style: TextStyle(
-                                color: Colors.grey[100], fontSize: 34),
+                              color: Colors.grey[100],
+                              fontSize: 34,
+                            ),
                           ),
                           SizedBox(height: 5),
                           Text(
                             'Nice to see you :)',
                             style: TextStyle(
-                                color: Colors.grey[100], fontSize: 18),
+                              color: Colors.grey[100],
+                              fontSize: 18,
+                            ),
                           ),
                           SizedBox(height: 20),
                           Text(
                             'Your plan for today:\n${widget.medications.length} medicines',
                             style: TextStyle(
-                                color: Colors.grey[100], fontSize: 16),
+                              color: Colors.grey[100],
+                              fontSize: 16,
+                            ),
                           ),
                         ],
                       ),
@@ -108,7 +122,10 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                   padding: EdgeInsets.only(left: 16.0),
                   child: Text(
                     'Daily review:',
-                    style: TextStyle(color: Colors.grey[800], fontSize: 24),
+                    style: TextStyle(
+                      color: Colors.grey[800],
+                      fontSize: 24,
+                    ),
                   ),
                 ),
                 SizedBox(height: 10),
@@ -123,20 +140,28 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         child: ListTile(
-                          leading: Icon(MaterialCommunityIcons.pill,
-                              color: Colors.primaries[
-                                  Random().nextInt(Colors.primaries.length)],
-                              size: 50),
+                          leading: Icon(
+                            MaterialCommunityIcons.pill,
+                            color: Colors.primaries[
+                                Random().nextInt(Colors.primaries.length)],
+                            size: 50,
+                          ),
                           title: Text(
                             widget.medications[index].name,
-                            style: TextStyle(color: Colors.grey[800]),
+                            style: TextStyle(
+                              color: Colors.grey[800],
+                            ),
                           ),
                           subtitle: Text(
                             'Amount: ${widget.medications[index].dosage.toString()} When: ${widget.medications[index].timing}',
-                            style: TextStyle(color: Colors.grey[600]),
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                            ),
                           ),
-                          trailing: Icon(Icons.keyboard_arrow_right,
-                              color: Colors.grey[600]),
+                          trailing: Icon(
+                            Icons.keyboard_arrow_right,
+                            color: Colors.grey[600],
+                          ),
                           onTap: () async {
                             var doctorDataAccess =
                                 DIContainer.getIt.get<DoctorDataAccess>();
