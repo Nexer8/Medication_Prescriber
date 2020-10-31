@@ -13,25 +13,30 @@ class AddTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      validator: validator,
-      controller: controller,
-      keyboardType: TextInputType.text,
-      cursorColor: Colors.green,
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(horizontal: 24.0),
-        filled: true,
-        fillColor: Colors.grey[100],
-        focusColor: Colors.grey[100],
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25.0),
-          borderSide: BorderSide.none,
+    return Column(
+      children: [
+        TextFormField(
+          validator: validator,
+          controller: controller,
+          keyboardType: TextInputType.text,
+          cursorColor: Colors.green,
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.grey[800],
+          ),
+          decoration: InputDecoration(
+            isDense: true,
+            contentPadding: EdgeInsets.zero,
+            enabledBorder: InputBorder.none,
+            hintStyle: TextStyle(
+              fontSize: 18,
+              color: Colors.grey[800],
+            ),
+            hintText: hintText,
+          ),
         ),
-        hintStyle: TextStyle(
-          color: Colors.grey[800],
-        ),
-        hintText: hintText,
-      ),
+        SizedBox(height: 50),
+      ],
     );
   }
 }

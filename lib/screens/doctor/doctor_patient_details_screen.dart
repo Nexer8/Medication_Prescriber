@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:ptsiim/components/add_text_form_field.dart';
+import 'package:ptsiim/components/detail_edit_text.dart';
 import 'package:ptsiim/components/detail_text.dart';
-import 'file:///E:/Flutter/Medication_Prescriber/lib/components/add_text_form_field.dart';
-import 'file:///E:/Flutter/Medication_Prescriber/lib/components/detail_edit_text.dart';
-import 'file:///E:/Flutter/Medication_Prescriber/lib/components/doctor_panel.dart';
+import 'package:ptsiim/components/doctor_panel.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
@@ -16,6 +16,7 @@ import 'package:ptsiim/services/medication_data_access.dart';
 import 'package:ptsiim/services/patient_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
 import 'package:ptsiim/utils/input_validators.dart';
+import 'package:recase/recase.dart';
 
 class DoctorPatientDetailsScreen extends StatefulWidget {
   final Patient patient;
@@ -44,6 +45,8 @@ class _DoctorPatientDetailsScreenState
 
   final _formKeyDialog = GlobalKey<FormState>();
   final _formKeyPatient = GlobalKey<FormState>();
+
+  String _timing = '';
 
   void initState() {
     super.initState();
@@ -86,94 +89,119 @@ class _DoctorPatientDetailsScreenState
                               height: 350,
                               width: 400,
                               child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    AddTextFormField(
-                                        controller: _nameController,
-                                        validator: validateMedicationName,
-                                        hintText: 'Name'),
-                                    SizedBox(height: 30),
-                                    //TODO: datapicker
-                                    AddTextFormField(
-                                        controller: _startDateController,
-                                        validator: validateName,
-                                        hintText: 'Start date'),
-                                    SizedBox(height: 30),
-                                    AddTextFormField(
-                                        controller: _endDateController,
-                                        validator: validateName,
-                                        hintText: 'End date'),
-                                    SizedBox(height: 30),
-                                    AddTextFormField(
-                                        controller: _dosageController,
-                                        validator: validateDosage,
-                                        hintText: 'Dosage'),
-                                    SizedBox(height: 30),
-                                    //TODO: list with enum
-                                    AddTextFormField(
-                                      controller: _timingController,
-                                      validator: validateName,
-                                      hintText: 'Timing',
-                                    ),
-                                    SizedBox(height: 30),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        IconButton(
-                                            icon: Icon(
-                                              Icons.cancel_outlined,
-                                              color: Colors.red,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 40),
+                                      AddTextFormField(
+                                          controller: _nameController,
+                                          validator: validateMedicationName,
+                                          hintText: 'Name'),
+                                      AddTextFormField(
+                                          controller: _dosageController,
+                                          validator: validateDosage,
+                                          hintText: 'Dosage'),
+                                      DropdownButtonHideUnderline(
+                                        child: DropdownButton<String>(
+                                          hint: Text(
+                                            'Timing',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.grey[800],
                                             ),
-                                            iconSize: 42,
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            }),
-                                        IconButton(
-                                          icon: Icon(
-                                            Icons.add_circle_outline,
-                                            color: Colors.green,
                                           ),
-                                          iconSize: 42,
-                                          onPressed: () async {
-                                            if (_formKeyDialog.currentState
-                                                .validate()) {
-                                              try {
-                                                var medication = Medication(
-                                                    id: 0,
-                                                    doctorId: widget.doctor.id,
-                                                    patientId: widget
-                                                        .patient.personalId,
-                                                    timing:
-                                                        _timingController.text,
-                                                    dosage: int.parse(
-                                                        _dosageController.text),
-                                                    name: _nameController.text,
-                                                    startDate:
-                                                        _startDateController
-                                                            .text,
-                                                    endDate: _endDateController
-                                                        .text);
-
-                                                var medicationDataAccess =
-                                                    DIContainer.getIt.get<
-                                                        MedicationDataAccess>();
-
-                                                await medicationDataAccess
-                                                    .createMedication(
-                                                        medication);
+                                          value: _timing,
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.grey[800],
+                                          ),
+                                          onChanged: (String newValue) {
+                                            _timing = newValue;
+                                          },
+                                          items: <String>[
+                                            'Irrelevant',
+                                            'Before eating',
+                                            'After eating'
+                                          ].map((String value) {
+                                            return DropdownMenuItem<String>(
+                                              value: value.pascalCase,
+                                              child: Text(
+                                                value,
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.grey[800]),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          IconButton(
+                                              icon: Icon(
+                                                Icons.cancel_outlined,
+                                                color: Colors.red,
+                                              ),
+                                              iconSize: 42,
+                                              onPressed: () {
 
                                                 Navigator.pop(context);
-                                              } catch (e) {
-                                                ErrorHandlingSnackbar.show(
-                                                    e, context);
+                                              }),
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.add_circle_outline,
+                                              color: Colors.green,
+                                            ),
+                                            iconSize: 42,
+                                            onPressed: () async {
+                                              if (_formKeyDialog.currentState
+                                                  .validate()) {
+                                                try {
+                                                  var medication = Medication(
+                                                      id: 0,
+                                                      doctorId:
+                                                          widget.doctor.id,
+                                                      patientId: widget
+                                                          .patient.personalId,
+                                                      timing: _timingController
+                                                          .text,
+                                                      dosage: int.parse(
+                                                          _dosageController
+                                                              .text),
+                                                      name:
+                                                          _nameController.text,
+                                                      startDate:
+                                                          _startDateController
+                                                              .text,
+                                                      endDate:
+                                                          _endDateController
+                                                              .text);
+
+                                                  var medicationDataAccess =
+                                                      DIContainer.getIt.get<
+                                                          MedicationDataAccess>();
+
+                                                  await medicationDataAccess
+                                                      .createMedication(
+                                                          medication);
+
+                                                  Navigator.pop(context);
+                                                } catch (e) {
+                                                  ErrorHandlingSnackbar.show(
+                                                      e, context);
+                                                }
                                               }
-                                            }
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -202,12 +230,13 @@ class _DoctorPatientDetailsScreenState
                   child: Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 128, vertical: 32),
-                    child: Column(
+                    child: SingleChildScrollView(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Center(
-                            child: Icon(Icons.account_circle_rounded,
-                                size: 150, color: Colors.grey[800]),
+                            child: Icon(Icons.account_circle,
+                                size: 200, color: Colors.grey[800]),
                           ),
                           SizedBox(height: 10),
                           DetailText(
@@ -224,52 +253,45 @@ class _DoctorPatientDetailsScreenState
                             controller: _lastNameController,
                             validator: validateMedicationName,
                           ),
-                          //TODO: add data picker
-                          Text('Birthdate',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[600])),
                           SizedBox(height: 20),
-                          Expanded(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: widget.medications.length,
-                              itemBuilder: (context, index) {
-                                return Card(
-                                  color: Colors.grey[100],
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                  ),
-                                  child: ListTile(
-                                    leading: Icon(MaterialCommunityIcons.pill,
-                                        color: Colors.primaries[Random()
-                                            .nextInt(Colors.primaries.length)],
-                                        size: 50),
-                                    title: Text(widget.medications[index].name,
-                                        style:
-                                            TextStyle(color: Colors.grey[800])),
-                                    subtitle: Text(
-                                        'Amount: ${widget.medications[index].dosage.toString()} When: ${widget.medications[index].timing}',
-                                        style:
-                                            TextStyle(color: Colors.grey[600])),
-                                    trailing: Icon(Icons.keyboard_arrow_right,
-                                        color: Colors.grey[600]),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              DoctorMedicationDetailsScreen(
-                                            medication:
-                                                widget.medications[index],
-                                            doctor: widget.doctor,
-                                          ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: widget.medications.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                color: Colors.grey[100],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                ),
+                                child: ListTile(
+                                  leading: Icon(MaterialCommunityIcons.pill,
+                                      color: Colors.primaries[Random()
+                                          .nextInt(Colors.primaries.length)],
+                                      size: 50),
+                                  title: Text(widget.medications[index].name,
+                                      style:
+                                          TextStyle(color: Colors.grey[800])),
+                                  subtitle: Text(
+                                      'Amount: ${widget.medications[index].dosage.toString()} When: ${widget.medications[index].timing}',
+                                      style:
+                                          TextStyle(color: Colors.grey[600])),
+                                  trailing: Icon(Icons.keyboard_arrow_right,
+                                      color: Colors.grey[600]),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            DoctorMedicationDetailsScreen(
+                                          medication: widget.medications[index],
+                                          doctor: widget.doctor,
                                         ),
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -318,7 +340,9 @@ class _DoctorPatientDetailsScreenState
                               ),
                             ],
                           ),
-                        ]),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),

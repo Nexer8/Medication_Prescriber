@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'file:///E:/Flutter/Medication_Prescriber/lib/components/add_text_form_field.dart';
-import 'file:///E:/Flutter/Medication_Prescriber/lib/components/doctor_panel.dart';
+import 'package:ptsiim/components/add_text_form_field.dart';
+import 'package:ptsiim/components/doctor_panel.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
@@ -12,6 +12,7 @@ import 'package:ptsiim/services/medication_data_access.dart';
 import 'package:ptsiim/services/patient_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
 import 'package:ptsiim/utils/input_validators.dart';
+
 
 class DoctorHomeScreen extends StatefulWidget {
   final Doctor doctor;
@@ -30,6 +31,7 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
   final _birthdateController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,33 +64,23 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                             width: 400,
                             child: SingleChildScrollView(
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   AddTextFormField(
                                     controller: _firstNameController,
                                     validator: validateName,
                                     hintText: 'First name',
                                   ),
-                                  SizedBox(height: 30),
                                   AddTextFormField(
                                     controller: _lastNameController,
                                     validator: validateName,
                                     hintText: 'Last name',
                                   ),
-                                  //SizedBox(height: 20),
-                                  SizedBox(height: 30),
                                   AddTextFormField(
                                     controller: _personalIdController,
                                     validator: validatePersonalId,
                                     hintText: 'Personal ID',
                                   ),
-                                  SizedBox(height: 30),
-                                  //TODO: Datapicker
-                                  AddTextFormField(
-                                    controller: _birthdateController,
-                                    validator: validateMedicationName,
-                                    hintText: 'Birthdate',
-                                  ),
-                                  SizedBox(height: 30),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ptsiim/components/detail_text.dart';
-import 'file:///E:/Flutter/Medication_Prescriber/lib/components/mobile_details_body.dart';
+import 'package:ptsiim/components/mobile_details_body.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
 import 'package:recase/recase.dart';
