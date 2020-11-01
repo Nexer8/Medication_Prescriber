@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:ptsiim/components/add_text_form_field.dart';
 import 'package:ptsiim/components/detail_edit_text.dart';
 import 'package:ptsiim/components/detail_text.dart';
 import 'package:ptsiim/components/doctor_panel.dart';
+import 'package:ptsiim/components/edit_date_picker.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
@@ -34,10 +34,10 @@ class DoctorPatientDetailsScreen extends StatefulWidget {
 class _DoctorPatientDetailsScreenState
     extends State<DoctorPatientDetailsScreen> {
   final _nameController = TextEditingController();
-  final _startDateController = TextEditingController();
-  final _endDateController = TextEditingController();
   final _dosageController = TextEditingController();
-  final _timingController = TextEditingController();
+  String _startDate;
+  String _endDate;
+  String _timing;
 
   TextEditingController _firstNameController;
   TextEditingController _lastNameController;
@@ -46,15 +46,11 @@ class _DoctorPatientDetailsScreenState
   final _formKeyDialog = GlobalKey<FormState>();
   final _formKeyPatient = GlobalKey<FormState>();
 
-  String _timing = '';
-
   void initState() {
     super.initState();
     _firstNameController =
         TextEditingController(text: widget.patient.firstName);
     _lastNameController = TextEditingController(text: widget.patient.lastName);
-    _birthdateController =
-        TextEditingController(text: widget.patient.birthdate);
   }
 
   @override
@@ -74,8 +70,8 @@ class _DoctorPatientDetailsScreenState
                   backgroundColor: Colors.transparent,
                   body: Form(
                     key: _formKeyDialog,
-                    child: Builder(
-                      builder: (BuildContext context) => GestureDetector(
+                    child: StatefulBuilder(
+                      builder: (context, setState) => GestureDetector(
                         child: SimpleDialog(
                           contentPadding: EdgeInsets.all(16.0),
                           shape: RoundedRectangleBorder(
@@ -95,48 +91,108 @@ class _DoctorPatientDetailsScreenState
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      SizedBox(height: 40),
-                                      AddTextFormField(
+                                      DetailEditText(
                                           controller: _nameController,
                                           validator: validateMedicationName,
-                                          hintText: 'Name'),
-                                      AddTextFormField(
+                                          label: 'Name'),
+                                      DetailEditText(
                                           controller: _dosageController,
                                           validator: validateDosage,
-                                          hintText: 'Dosage'),
-                                      DropdownButtonHideUnderline(
-                                        child: DropdownButton<String>(
-                                          hint: Text(
-                                            'Timing',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.grey[800],
-                                            ),
-                                          ),
-                                          value: _timing,
+                                          label: 'Dosage'),
+                                      EditDatePicker(
+                                        date: _startDate,
+                                        label: 'Start Date',
+                                        onTap: () async {
+                                          DateTime initialDate;
+                                          if (_startDate == null) {
+                                            initialDate = DateTime.now();
+                                          } else {
+                                            initialDate =
+                                                DateTime.parse(_startDate);
+                                          }
+                                          DateTime picked =
+                                              await showDatePicker(
+                                            context: context,
+                                            initialDate: initialDate,
+                                            firstDate: DateTime(1920),
+                                            lastDate: DateTime(2050),
+                                          );
+                                          if (picked != null &&
+                                              picked != initialDate)
+                                            setState(
+                                              () {
+                                                initialDate = picked;
+                                                _startDate =
+                                                    picked.toIso8601String();
+                                              },
+                                            );
+                                        },
+                                      ),
+                                      EditDatePicker(
+                                        date: _endDate,
+                                        label: 'End Date',
+                                        onTap: () async {
+                                          DateTime initialDate;
+                                          if (_endDate == null) {
+                                            initialDate = DateTime.now();
+                                          } else {
+                                            initialDate =
+                                                DateTime.parse(_endDate);
+                                          }
+                                          DateTime picked =
+                                              await showDatePicker(
+                                            context: context,
+                                            initialDate: initialDate,
+                                            firstDate: DateTime(1920),
+                                            lastDate: DateTime(2050),
+                                          );
+                                          if (picked != null &&
+                                              picked != initialDate)
+                                            setState(
+                                              () {
+                                                initialDate = picked;
+                                                _endDate =
+                                                    picked.toIso8601String();
+                                              },
+                                            );
+                                        },
+                                      ),
+                                      DropdownButtonFormField<String>(
+                                        isDense: true,
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                        ),
+                                        hint: Text(
+                                          'Timing',
                                           style: TextStyle(
                                             fontSize: 18,
                                             color: Colors.grey[800],
                                           ),
-                                          onChanged: (String newValue) {
-                                            _timing = newValue;
-                                          },
-                                          items: <String>[
-                                            'Irrelevant',
-                                            'Before eating',
-                                            'After eating'
-                                          ].map((String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value.pascalCase,
-                                              child: Text(
-                                                value,
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    color: Colors.grey[800]),
-                                              ),
-                                            );
-                                          }).toList(),
                                         ),
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.grey[800],
+                                        ),
+                                        onChanged: (String newValue) {
+                                          setState(() {
+                                            _timing = newValue;
+                                          });
+                                        },
+                                        items: <String>[
+                                          'Irrelevant',
+                                          'BeforeEating',
+                                          'AfterEating'
+                                        ].map((String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(
+                                              value.sentenceCase,
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.grey[800]),
+                                            ),
+                                          );
+                                        }).toList(),
                                       ),
                                       Row(
                                         mainAxisAlignment:
@@ -149,7 +205,6 @@ class _DoctorPatientDetailsScreenState
                                               ),
                                               iconSize: 42,
                                               onPressed: () {
-
                                                 Navigator.pop(context);
                                               }),
                                           IconButton(
@@ -168,19 +223,14 @@ class _DoctorPatientDetailsScreenState
                                                           widget.doctor.id,
                                                       patientId: widget
                                                           .patient.personalId,
-                                                      timing: _timingController
-                                                          .text,
+                                                      timing: _timing,
                                                       dosage: int.parse(
                                                           _dosageController
                                                               .text),
                                                       name:
                                                           _nameController.text,
-                                                      startDate:
-                                                          _startDateController
-                                                              .text,
-                                                      endDate:
-                                                          _endDateController
-                                                              .text);
+                                                      startDate: _startDate,
+                                                      endDate: _endDate);
 
                                                   var medicationDataAccess =
                                                       DIContainer.getIt.get<
@@ -242,6 +292,10 @@ class _DoctorPatientDetailsScreenState
                           DetailText(
                             label: 'PESEL',
                             data: widget.patient.personalId.toString(),
+                          ),
+                          DetailText(
+                            label: 'Birthdate',
+                            data: widget.patient.birthdate.substring(0, 10),
                           ),
                           DetailEditText(
                             label: 'First name',

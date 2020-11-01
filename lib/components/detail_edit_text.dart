@@ -27,7 +27,8 @@ class DetailEditText extends StatelessWidget {
         TextFormField(
           validator: validator,
           controller: controller,
-          decoration: InputDecoration(isDense: true, enabledBorder: InputBorder.none),
+          decoration:
+              InputDecoration(isDense: true, enabledBorder: InputBorder.none),
           style: TextStyle(
             fontSize: 18,
             color: Colors.grey[800],

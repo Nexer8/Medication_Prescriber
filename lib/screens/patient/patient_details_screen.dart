@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ptsiim/components/detail_text.dart';
-import 'package:ptsiim/components/mobile_details_body.dart';
+import 'package:ptsiim/components/details_body.dart';
 import 'package:ptsiim/models/patient.dart';
 
 class PatientProfileScreen extends StatelessWidget {

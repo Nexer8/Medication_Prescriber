@@ -3,7 +3,7 @@ String validateName(String value) {
     return 'Please enter some text.';
   }
 
-  if (value.contains(RegExp(r'^([A-Za-z])+$'))) {
+  if (value.contains(RegExp(r'^([A-Z a-z])+$'))) {
     return null;
   } else {
     return 'Invalid input! A name cannot consist of special characters nor digits.';

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ptsiim/components/detail_edit_text.dart';
 import 'package:ptsiim/components/detail_text.dart';
 import 'package:ptsiim/components/doctor_panel.dart';
+import 'package:ptsiim/components/edit_date_picker.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
@@ -25,8 +26,6 @@ class DoctorMedicationDetailsScreen extends StatefulWidget {
 class _DoctorMedicationDetailsScreenState
     extends State<DoctorMedicationDetailsScreen> {
   TextEditingController _nameController;
-  TextEditingController _startDateController;
-  TextEditingController _endDateController;
   TextEditingController _dosageController;
   final _formKey = GlobalKey<FormState>();
   String _timing;
@@ -34,9 +33,6 @@ class _DoctorMedicationDetailsScreenState
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.medication.name);
-    _startDateController =
-        TextEditingController(text: widget.medication.startDate);
-    _endDateController = TextEditingController(text: widget.medication.endDate);
     _dosageController =
         TextEditingController(text: widget.medication.dosage.toString());
     _timing = widget.medication.timing.sentenceCase;
@@ -68,8 +64,8 @@ class _DoctorMedicationDetailsScreenState
                         children: [
                           Center(
                               child: Image.asset('assets/details.png',
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.25)),
+                                  height: MediaQuery.of(context).size.height *
+                                      0.25)),
                           SizedBox(height: 12),
                           DetailText(
                             label: 'PESEL',
@@ -90,47 +86,85 @@ class _DoctorMedicationDetailsScreenState
                             controller: _dosageController,
                             validator: validateDosage,
                           ),
-                          Text(
-                            'Timing',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[600],
-                            ),
+                          EditDatePicker(
+                            date: widget.medication.startDate,
+                            label: 'Start date',
+                            onTap: () async {
+                              DateTime initialDate =
+                                  DateTime.parse(widget.medication.startDate);
+                              DateTime picked = await showDatePicker(
+                                context: context,
+                                initialDate: initialDate,
+                                firstDate: DateTime(1920),
+                                lastDate: DateTime(2050),
+                              );
+                              if (picked != null && picked != initialDate)
+                                setState(
+                                  () {
+                                    initialDate = picked;
+                                    widget.medication.startDate =
+                                        picked.toIso8601String();
+                                  },
+                                );
+                            },
                           ),
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              hint: Text(
-                                _timing,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.grey[800],
-                                ),
-                              ),
-                              value: _timing,
+                          EditDatePicker(
+                            date: widget.medication.endDate,
+                            label: 'End date',
+                            onTap: () async {
+                              DateTime initialDate =
+                                  DateTime.parse(widget.medication.endDate);
+                              DateTime picked = await showDatePicker(
+                                context: context,
+                                initialDate: initialDate,
+                                firstDate: DateTime(1920),
+                                lastDate: DateTime(2050),
+                              );
+                              if (picked != null && picked != initialDate)
+                                setState(
+                                  () {
+                                    initialDate = picked;
+                                    widget.medication.endDate =
+                                        picked.toIso8601String();
+                                  },
+                                );
+                            },
+                          ),
+                          DropdownButtonFormField<String>(
+                            isDense: true,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                            hint: Text(
+                              _timing,
                               style: TextStyle(
                                 fontSize: 18,
                                 color: Colors.grey[800],
                               ),
-                              onChanged: (String newValue) {
-                                setState(() {
-                                  _timing = newValue;
-                                });
-                              },
-                              items: <String>[
-                                'Irrelevant',
-                                'Before eating',
-                                'After eating'
-                              ].map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value.pascalCase,
-                                  child: Text(
-                                    value,
-                                    style: TextStyle(
-                                        fontSize: 18, color: Colors.grey[800]),
-                                  ),
-                                );
-                              }).toList(),
                             ),
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey[800],
+                            ),
+                            onChanged: (String newValue) {
+                              setState(() {
+                                _timing = newValue;
+                              });
+                            },
+                            items: <String>[
+                              'Irrelevant',
+                              'BeforeEating',
+                              'AfterEating'
+                            ].map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value.sentenceCase,
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.grey[800]),
+                                ),
+                              );
+                            }).toList(),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -157,22 +191,20 @@ class _DoctorMedicationDetailsScreenState
                                 icon: Icon(Icons.save, color: Colors.blue),
                                 onPressed: () async {
                                   if (_formKey.currentState.validate()) {
-                                    widget.medication.name = _nameController.text;
-                                    widget.medication.startDate =
-                                        _startDateController.text;
-                                    widget.medication.endDate =
-                                        _endDateController.text;
+                                    widget.medication.name =
+                                        _nameController.text;
                                     widget.medication.dosage =
                                         int.parse(_dosageController.text);
-                                    widget.medication.timing = _timing;
+                                    widget.medication.timing =
+                                        _timing.pascalCase;
 
                                     var medicationDataAccess = DIContainer.getIt
                                         .get<MedicationDataAccess>();
 
                                     try {
                                       await medicationDataAccess
-                                          .editMedicationData(widget.medication);
-
+                                          .editMedicationData(
+                                              widget.medication);
                                       Navigator.pop(context);
                                     } catch (e) {
                                       ErrorHandlingSnackbar.show(e, context);
