@@ -6,24 +6,23 @@ import 'package:ptsiim/components/error_handling_snackbar.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
 import 'package:ptsiim/models/patient.dart';
-import 'package:ptsiim/screens/patient/medication_details_screen.dart';
+import 'package:ptsiim/screens/mobile/medication_screen.dart';
+import 'package:ptsiim/screens/mobile/profile_screen.dart';
+import 'package:ptsiim/screens/mobile/welcome_screen.dart';
 import 'package:ptsiim/services/doctor_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
 
-import 'patient_details_screen.dart';
-import 'patient_welcome_screen.dart';
-
-class PatientHomeScreen extends StatefulWidget {
+class MobileHomeScreen extends StatefulWidget {
   final Patient patient;
   final List<Medication> medications;
 
-  PatientHomeScreen({@required this.patient, @required this.medications});
+  MobileHomeScreen({@required this.patient, @required this.medications});
 
   @override
-  _PatientHomeScreenState createState() => _PatientHomeScreenState();
+  _MobileHomeScreenState createState() => _MobileHomeScreenState();
 }
 
-class _PatientHomeScreenState extends State<PatientHomeScreen> {
+class _MobileHomeScreenState extends State<MobileHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +49,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PatientWelcomeScreen(),
+                            builder: (context) => MobileWelcomeScreen(),
                           ),
                         );
                       },
@@ -66,7 +65,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                PatientProfileScreen(patient: widget.patient),
+                                MobileProfileScreen(patient: widget.patient),
                           ),
                         );
                       },
@@ -153,7 +152,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                             ),
                           ),
                           subtitle: Text(
-                            'Amount: ${widget.medications[index].dosage.toString()} When: ${widget.medications[index].timing}',
+                            'Dosage: ${widget.medications[index].dosage.toString()} Timing: ${widget.medications[index].timing}',
                             style: TextStyle(
                               color: Colors.grey[600],
                             ),
@@ -174,7 +173,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => MedicationDetailsScreen(
+                                  builder: (context) => MobileMedicationScreen(
                                       doctor: doctor,
                                       medication: widget.medications[index]),
                                 ),

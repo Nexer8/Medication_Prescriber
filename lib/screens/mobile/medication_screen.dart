@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ptsiim/components/detail_text.dart';
 import 'package:ptsiim/components/details_body.dart';
@@ -6,11 +5,11 @@ import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
 import 'package:recase/recase.dart';
 
-class MedicationDetailsScreen extends StatelessWidget {
+class MobileMedicationScreen extends StatelessWidget {
   final Medication medication;
   final Doctor doctor;
 
-  MedicationDetailsScreen({@required this.medication, @required this.doctor});
+  MobileMedicationScreen({@required this.medication, @required this.doctor});
 
   @override
   Widget build(BuildContext context) {

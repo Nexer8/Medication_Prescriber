@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ptsiim/components/detail_text.dart';
 import 'package:ptsiim/components/details_body.dart';
 import 'package:ptsiim/models/patient.dart';
 
-class PatientProfileScreen extends StatelessWidget {
+class MobileProfileScreen extends StatelessWidget {
   final Patient patient;
 
-  PatientProfileScreen({@required this.patient});
+  MobileProfileScreen({@required this.patient});
 
   @override
   Widget build(BuildContext context) {

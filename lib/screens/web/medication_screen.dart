@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ptsiim/components/detail_edit_text.dart';
+import 'package:ptsiim/components/date_picker.dart';
 import 'package:ptsiim/components/detail_text.dart';
+import 'package:ptsiim/components/detail_text_form_field.dart';
 import 'package:ptsiim/components/doctor_panel.dart';
-import 'package:ptsiim/components/edit_date_picker.dart';
+import 'package:ptsiim/components/drop_down_button.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
@@ -12,19 +12,17 @@ import 'package:ptsiim/services/service_locator.dart';
 import 'package:ptsiim/utils/input_validators.dart';
 import 'package:recase/recase.dart';
 
-class DoctorMedicationDetailsScreen extends StatefulWidget {
+class WebMedicationScreen extends StatefulWidget {
   final Medication medication;
   final Doctor doctor;
 
-  DoctorMedicationDetailsScreen({@required this.medication, this.doctor});
+  WebMedicationScreen({@required this.medication, this.doctor});
 
   @override
-  _DoctorMedicationDetailsScreenState createState() =>
-      _DoctorMedicationDetailsScreenState();
+  _WebMedicationScreenState createState() => _WebMedicationScreenState();
 }
 
-class _DoctorMedicationDetailsScreenState
-    extends State<DoctorMedicationDetailsScreen> {
+class _WebMedicationScreenState extends State<WebMedicationScreen> {
   TextEditingController _nameController;
   TextEditingController _dosageController;
   final _formKey = GlobalKey<FormState>();
@@ -76,17 +74,17 @@ class _DoctorMedicationDetailsScreenState
                             data:
                                 '${widget.doctor.firstName} ${widget.doctor.lastName}',
                           ),
-                          DetailEditText(
+                          DetailTextFormField(
                             label: 'Name',
                             controller: _nameController,
                             validator: validateName,
                           ),
-                          DetailEditText(
+                          DetailTextFormField(
                             label: 'Dosage',
                             controller: _dosageController,
                             validator: validateDosage,
                           ),
-                          EditDatePicker(
+                          DatePicker(
                             date: widget.medication.startDate,
                             label: 'Start date',
                             onTap: () async {
@@ -108,7 +106,7 @@ class _DoctorMedicationDetailsScreenState
                                 );
                             },
                           ),
-                          EditDatePicker(
+                          DatePicker(
                             date: widget.medication.endDate,
                             label: 'End date',
                             onTap: () async {
@@ -130,41 +128,13 @@ class _DoctorMedicationDetailsScreenState
                                 );
                             },
                           ),
-                          DropdownButtonFormField<String>(
-                            isDense: true,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                            ),
-                            hint: Text(
-                              _timing,
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey[800],
-                              ),
-                            ),
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey[800],
-                            ),
+                          DropDownButton(
+                            hintText: _timing,
                             onChanged: (String newValue) {
                               setState(() {
                                 _timing = newValue;
                               });
                             },
-                            items: <String>[
-                              'Irrelevant',
-                              'BeforeEating',
-                              'AfterEating'
-                            ].map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value.sentenceCase,
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.grey[800]),
-                                ),
-                              );
-                            }).toList(),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

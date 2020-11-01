@@ -5,14 +5,13 @@ import 'package:ptsiim/components/id_text_form_field.dart';
 import 'package:ptsiim/components/login_raised_button.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/patient.dart';
+import 'package:ptsiim/screens/web/home_screen.dart';
 import 'package:ptsiim/services/doctor_data_access.dart';
 import 'package:ptsiim/services/patient_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
 import 'package:ptsiim/utils/input_validators.dart';
 
-import 'doctor_home_screen.dart';
-
-class DoctorWelcomeScreen extends StatelessWidget {
+class WebWelcomeScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final _idController = TextEditingController();
 
@@ -83,7 +82,7 @@ class DoctorWelcomeScreen extends StatelessWidget {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => DoctorHomeScreen(
+                                  builder: (context) => WebHomeScreen(
                                     doctor: doctor,
                                     patients: patients,
                                   ),

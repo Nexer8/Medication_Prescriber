@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ptsiim/models/doctor.dart';
-import 'package:ptsiim/screens/doctor/doctor_welcome_screen.dart';
+import 'package:ptsiim/screens/web/welcome_screen.dart';
 
 class DoctorPanel extends StatelessWidget {
   DoctorPanel({@required this.doctor, @required this.content});
@@ -64,7 +64,7 @@ class DoctorPanel extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DoctorWelcomeScreen(),
+                            builder: (context) => WebWelcomeScreen(),
                           ),
                         );
                       },

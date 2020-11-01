@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class EditDatePicker extends StatelessWidget {
+class DatePicker extends StatelessWidget {
   final String date;
   final String label;
   final Function onTap;
 
-  const EditDatePicker(
+  const DatePicker(
       {@required this.date, @required this.label, @required this.onTap});
 
   @override
@@ -24,7 +23,7 @@ class EditDatePicker extends StatelessWidget {
         if (date == null)
           InkWell(
             child: Text(
-              "                    ",
+              "               ",
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey[800],

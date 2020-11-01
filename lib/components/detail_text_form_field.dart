@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class DetailEditText extends StatelessWidget {
-  const DetailEditText({
+class DetailTextFormField extends StatelessWidget {
+  const DetailTextFormField({
     Key key,
     @required this.controller,
     @required this.validator,

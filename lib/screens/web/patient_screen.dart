@@ -1,38 +1,36 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:ptsiim/components/detail_edit_text.dart';
+import 'package:ptsiim/components/date_picker.dart';
 import 'package:ptsiim/components/detail_text.dart';
+import 'package:ptsiim/components/detail_text_form_field.dart';
 import 'package:ptsiim/components/doctor_panel.dart';
-import 'package:ptsiim/components/edit_date_picker.dart';
+import 'package:ptsiim/components/drop_down_button.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
 import 'package:ptsiim/models/patient.dart';
-import 'package:ptsiim/screens/doctor/doctor_medication_details_screen.dart';
+import 'package:ptsiim/screens/web/medication_screen.dart';
 import 'package:ptsiim/services/medication_data_access.dart';
 import 'package:ptsiim/services/patient_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
 import 'package:ptsiim/utils/input_validators.dart';
 import 'package:recase/recase.dart';
 
-class DoctorPatientDetailsScreen extends StatefulWidget {
+class WebPatientScreen extends StatefulWidget {
   final Patient patient;
   final List<Medication> medications;
   final Doctor doctor;
 
-  DoctorPatientDetailsScreen(
+  WebPatientScreen(
       {@required this.patient, @required this.medications, this.doctor});
 
   @override
-  _DoctorPatientDetailsScreenState createState() =>
-      _DoctorPatientDetailsScreenState();
+  _WebPatientScreenState createState() => _WebPatientScreenState();
 }
 
-class _DoctorPatientDetailsScreenState
-    extends State<DoctorPatientDetailsScreen> {
+class _WebPatientScreenState extends State<WebPatientScreen> {
   final _nameController = TextEditingController();
   final _dosageController = TextEditingController();
   String _startDate;
@@ -91,15 +89,15 @@ class _DoctorPatientDetailsScreenState
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      DetailEditText(
+                                      DetailTextFormField(
                                           controller: _nameController,
                                           validator: validateMedicationName,
                                           label: 'Name'),
-                                      DetailEditText(
+                                      DetailTextFormField(
                                           controller: _dosageController,
                                           validator: validateDosage,
                                           label: 'Dosage'),
-                                      EditDatePicker(
+                                      DatePicker(
                                         date: _startDate,
                                         label: 'Start Date',
                                         onTap: () async {
@@ -128,7 +126,7 @@ class _DoctorPatientDetailsScreenState
                                             );
                                         },
                                       ),
-                                      EditDatePicker(
+                                      DatePicker(
                                         date: _endDate,
                                         label: 'End Date',
                                         onTap: () async {
@@ -157,42 +155,13 @@ class _DoctorPatientDetailsScreenState
                                             );
                                         },
                                       ),
-                                      DropdownButtonFormField<String>(
-                                        isDense: true,
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                        ),
-                                        hint: Text(
-                                          'Timing',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.grey[800],
-                                          ),
-                                        ),
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.grey[800],
-                                        ),
+                                      DropDownButton(
+                                        hintText: 'Timing',
                                         onChanged: (String newValue) {
                                           setState(() {
                                             _timing = newValue;
                                           });
                                         },
-                                        items: <String>[
-                                          'Irrelevant',
-                                          'BeforeEating',
-                                          'AfterEating'
-                                        ].map((String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(
-                                              value.sentenceCase,
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.grey[800]),
-                                            ),
-                                          );
-                                        }).toList(),
                                       ),
                                       Row(
                                         mainAxisAlignment:
@@ -297,12 +266,12 @@ class _DoctorPatientDetailsScreenState
                             label: 'Birthdate',
                             data: widget.patient.birthdate.substring(0, 10),
                           ),
-                          DetailEditText(
+                          DetailTextFormField(
                             label: 'First name',
                             controller: _firstNameController,
                             validator: validateMedicationName,
                           ),
-                          DetailEditText(
+                          DetailTextFormField(
                             label: 'Last name',
                             controller: _lastNameController,
                             validator: validateMedicationName,
@@ -326,7 +295,7 @@ class _DoctorPatientDetailsScreenState
                                       style:
                                           TextStyle(color: Colors.grey[800])),
                                   subtitle: Text(
-                                      'Amount: ${widget.medications[index].dosage.toString()} When: ${widget.medications[index].timing}',
+                                      'Dosage: ${widget.medications[index].dosage.toString()} Timing: ${widget.medications[index].timing.sentenceCase}',
                                       style:
                                           TextStyle(color: Colors.grey[600])),
                                   trailing: Icon(Icons.keyboard_arrow_right,
@@ -336,7 +305,7 @@ class _DoctorPatientDetailsScreenState
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            DoctorMedicationDetailsScreen(
+                                            WebMedicationScreen(
                                           medication: widget.medications[index],
                                           doctor: widget.doctor,
                                         ),

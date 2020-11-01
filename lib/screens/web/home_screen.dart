@@ -1,30 +1,29 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:ptsiim/components/detail_edit_text.dart';
+import 'package:ptsiim/components/date_picker.dart';
+import 'package:ptsiim/components/detail_text_form_field.dart';
 import 'package:ptsiim/components/doctor_panel.dart';
-import 'package:ptsiim/components/edit_date_picker.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
 import 'package:ptsiim/models/patient.dart';
-import 'package:ptsiim/screens/doctor/doctor_patient_details_screen.dart';
+import 'package:ptsiim/screens/web/patient_screen.dart';
 import 'package:ptsiim/services/medication_data_access.dart';
 import 'package:ptsiim/services/patient_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
 import 'package:ptsiim/utils/input_validators.dart';
 
-class DoctorHomeScreen extends StatefulWidget {
+class WebHomeScreen extends StatefulWidget {
   final Doctor doctor;
   final List<Patient> patients;
 
-  const DoctorHomeScreen({this.doctor, this.patients});
+  const WebHomeScreen({this.doctor, this.patients});
 
   @override
-  _DoctorHomeScreenState createState() => _DoctorHomeScreenState();
+  _WebHomeScreenState createState() => _WebHomeScreenState();
 }
 
-class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
+class _WebHomeScreenState extends State<WebHomeScreen> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _personalIdController = TextEditingController();
@@ -64,11 +63,11 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  DetailEditText(
+                                  DetailTextFormField(
                                       controller: _personalIdController,
                                       validator: validatePersonalId,
                                       label: 'PESEL'),
-                                  EditDatePicker(
+                                  DatePicker(
                                     date: _birthdate,
                                     label: 'Birthdate',
                                     onTap: () async {
@@ -96,11 +95,11 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                                         );
                                     },
                                   ),
-                                  DetailEditText(
+                                  DetailTextFormField(
                                       controller: _firstNameController,
                                       validator: validateName,
                                       label: 'First name'),
-                                  DetailEditText(
+                                  DetailTextFormField(
                                       controller: _lastNameController,
                                       validator: validateName,
                                       label: 'Last name'),
@@ -232,8 +231,7 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            DoctorPatientDetailsScreen(
+                                        builder: (context) => WebPatientScreen(
                                           patient: widget.patients[index],
                                           medications: medications,
                                           doctor: widget.doctor,

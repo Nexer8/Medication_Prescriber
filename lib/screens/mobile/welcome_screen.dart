@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
 import 'package:ptsiim/components/id_text_form_field.dart';
 import 'package:ptsiim/components/login_raised_button.dart';
 import 'package:ptsiim/models/medication.dart';
 import 'package:ptsiim/models/patient.dart';
+import 'package:ptsiim/screens/mobile/home_screen.dart';
 import 'package:ptsiim/services/medication_data_access.dart';
 import 'package:ptsiim/services/patient_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
 import 'package:ptsiim/utils/input_validators.dart';
 
-import 'patient_home_screen.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-
-class PatientWelcomeScreen extends StatefulWidget {
+class MobileWelcomeScreen extends StatefulWidget {
   @override
-  _PatientWelcomeScreenState createState() => _PatientWelcomeScreenState();
+  _MobileWelcomeScreenState createState() => _MobileWelcomeScreenState();
 }
 
-class _PatientWelcomeScreenState extends State<PatientWelcomeScreen> {
+class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
   final _formKey = GlobalKey<FormState>();
   final _idController = TextEditingController();
 
@@ -82,7 +81,7 @@ class _PatientWelcomeScreenState extends State<PatientWelcomeScreen> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => PatientHomeScreen(
+                                    builder: (context) => MobileHomeScreen(
                                       patient: patient,
                                       medications: medications,
                                     ),
