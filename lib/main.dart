@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ptsiim/screens/doctor/doctor_welcome_screen.dart';
-import 'package:ptsiim/screens/patient/patient_welcome_screen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:ptsiim/services/service_locator.dart';
+
+import 'screens/mobile/welcome_screen.dart';
+import 'screens/web/welcome_screen.dart';
 
 void main() {
   DIContainer.registerServices();
@@ -24,10 +25,11 @@ class MedicationPrescriber extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Medication prescriber',
       theme: ThemeData(
+        fontFamily: 'Lato',
         primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: kIsWeb ? DoctorWelcomeScreen() : PatientWelcomeScreen(),
+      home: kIsWeb ? WebWelcomeScreen() : MobileWelcomeScreen(),
     );
   }
 }
