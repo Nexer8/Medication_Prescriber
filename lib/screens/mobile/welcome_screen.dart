@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
 import 'package:ptsiim/components/rounded_text_form_field.dart';
 import 'package:ptsiim/components/login_raised_button.dart';
@@ -69,6 +70,12 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
                                 Patient patient =
                                     await patientDataAccess.getPatientById(
                                         int.parse(_idController.text));
+
+                                var secureStorage = DIContainer.getIt
+                                    .get<FlutterSecureStorage>();
+                                await secureStorage.write(
+                                    key: 'personalId',
+                                    value: _idController.text);
 
                                 Navigator.pushReplacement(
                                   context,

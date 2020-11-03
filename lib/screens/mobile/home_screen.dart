@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
@@ -66,7 +67,11 @@ class _MobileHomeScreenState extends State<MobileHomeScreen> {
                           color: Colors.grey[800],
                           size: 28,
                         ),
-                        onPressed: () {
+                        onPressed: () async {
+                          var secureStorage =
+                              DIContainer.getIt.get<FlutterSecureStorage>();
+                          await secureStorage.delete(key: 'personalId');
+
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
