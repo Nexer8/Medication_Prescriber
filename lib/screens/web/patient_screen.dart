@@ -15,6 +15,7 @@ import 'package:ptsiim/screens/web/medication_screen.dart';
 import 'package:ptsiim/services/medication_data_access.dart';
 import 'package:ptsiim/services/patient_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
+import 'package:ptsiim/utils/api_constants.dart';
 import 'package:ptsiim/utils/input_validators.dart';
 import 'package:recase/recase.dart';
 
@@ -33,19 +34,38 @@ class WebPatientScreen extends StatefulWidget {
 class _WebPatientScreenState extends State<WebPatientScreen> {
   final _nameController = TextEditingController();
   final _dosageController = TextEditingController();
-  String _startDate;
-  String _endDate;
-  String _timing;
+  final _startDateController = TextEditingController(text: '');
+  final _endDateController = TextEditingController(text: '');
+  String _timing = 'Irrelevant';
 
   TextEditingController _firstNameController;
   TextEditingController _lastNameController;
-  TextEditingController _birthdateController;
 
   final _formKeyDialog = GlobalKey<FormState>();
   final _formKeyPatient = GlobalKey<FormState>();
 
+  var medicationDataAccess = DIContainer.getIt.get<MedicationDataAccess>();
+
+  Future<List<Medication>> _medicationsList;
+
+  Future<Null> refreshList() async {
+    setState(() {
+      _medicationsList = medicationDataAccess
+          .getMedicationsByPatientId(widget.patient.personalId);
+    });
+  }
+
+  void clearController() {
+    _nameController.clear();
+    _dosageController.clear();
+    _startDateController.clear();
+    _endDateController.clear();
+  }
+
   void initState() {
     super.initState();
+    _medicationsList = medicationDataAccess
+        .getMedicationsByPatientId(widget.patient.personalId);
     _firstNameController =
         TextEditingController(text: widget.patient.firstName);
     _lastNameController = TextEditingController(text: widget.patient.lastName);
@@ -57,10 +77,10 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
       onWillPop: () async => true,
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          tooltip: 'Add new medicaation',
+          tooltip: 'Add new medication',
           child: Icon(Icons.add),
-          onPressed: () {
-            showDialog(
+          onPressed: () async {
+            bool isRefreshNeeded = await showDialog(
               context: context,
               builder: (context) => GestureDetector(
                 onTap: () => Navigator.of(context).pop(),
@@ -77,11 +97,10 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                               Radius.circular(25.0),
                             ),
                           ),
-                          title: Text('Enter new medication'),
+                          title: Text('New medication'),
                           children: [
                             Container(
-                              height: 350,
-                              width: 400,
+                              width: MediaQuery.of(context).size.width * 0.2,
                               child: SingleChildScrollView(
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 16.0),
@@ -98,15 +117,16 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                                           validator: validateDosage,
                                           label: 'Dosage'),
                                       DatePicker(
-                                        date: _startDate,
+                                        controller: _startDateController,
+                                        validator: validateDate,
                                         label: 'Start Date',
                                         onTap: () async {
                                           DateTime initialDate;
-                                          if (_startDate == null) {
+                                          if (_startDateController.text == '') {
                                             initialDate = DateTime.now();
                                           } else {
-                                            initialDate =
-                                                DateTime.parse(_startDate);
+                                            initialDate = DateTime.parse(
+                                                _startDateController.text);
                                           }
                                           DateTime picked =
                                               await showDatePicker(
@@ -120,22 +140,25 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                                             setState(
                                               () {
                                                 initialDate = picked;
-                                                _startDate =
-                                                    picked.toIso8601String();
+                                                _startDateController.text =
+                                                    picked
+                                                        .toIso8601String()
+                                                        .substring(0, 10);
                                               },
                                             );
                                         },
                                       ),
                                       DatePicker(
-                                        date: _endDate,
+                                        controller: _endDateController,
+                                        validator: validateDate,
                                         label: 'End Date',
                                         onTap: () async {
                                           DateTime initialDate;
-                                          if (_endDate == null) {
+                                          if (_endDateController.text == '') {
                                             initialDate = DateTime.now();
                                           } else {
-                                            initialDate =
-                                                DateTime.parse(_endDate);
+                                            initialDate = DateTime.parse(
+                                                _endDateController.text);
                                           }
                                           DateTime picked =
                                               await showDatePicker(
@@ -149,14 +172,15 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                                             setState(
                                               () {
                                                 initialDate = picked;
-                                                _endDate =
-                                                    picked.toIso8601String();
+                                                _endDateController.text = picked
+                                                    .toIso8601String()
+                                                    .substring(0, 10);
                                               },
                                             );
                                         },
                                       ),
                                       DropDownButton(
-                                        hintText: 'Timing',
+                                        timing: 'Irrelevant',
                                         onChanged: (String newValue) {
                                           setState(() {
                                             _timing = newValue;
@@ -168,15 +192,18 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
                                           IconButton(
+                                              tooltip: 'Cancel',
                                               icon: Icon(
                                                 Icons.cancel_outlined,
                                                 color: Colors.red,
                                               ),
                                               iconSize: 42,
                                               onPressed: () {
-                                                Navigator.pop(context);
+                                                clearController();
+                                                Navigator.pop(context, false);
                                               }),
                                           IconButton(
+                                            tooltip: 'Add',
                                             icon: Icon(
                                               Icons.add_circle_outline,
                                               color: Colors.green,
@@ -198,8 +225,13 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                                                               .text),
                                                       name:
                                                           _nameController.text,
-                                                      startDate: _startDate,
-                                                      endDate: _endDate);
+                                                      startDate:
+                                                          _startDateController
+                                                              .text,
+                                                      endDate:
+                                                          _endDateController
+                                                                  .text +
+                                                              endDateTime);
 
                                                   var medicationDataAccess =
                                                       DIContainer.getIt.get<
@@ -208,8 +240,8 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                                                   await medicationDataAccess
                                                       .createMedication(
                                                           medication);
-
-                                                  Navigator.pop(context);
+                                                  clearController();
+                                                  Navigator.pop(context, true);
                                                 } catch (e) {
                                                   ErrorHandlingSnackbar.show(
                                                       e, context);
@@ -232,6 +264,7 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                 ),
               ),
             );
+            if (isRefreshNeeded) refreshList();
           },
         ),
         body: Form(
@@ -269,57 +302,76 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                           DetailTextFormField(
                             label: 'First name',
                             controller: _firstNameController,
-                            validator: validateMedicationName,
+                            validator: validateName,
                           ),
                           DetailTextFormField(
                             label: 'Last name',
                             controller: _lastNameController,
-                            validator: validateMedicationName,
+                            validator: validateName,
                           ),
                           SizedBox(height: 20),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: widget.medications.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                color: Colors.grey[100],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                ),
-                                child: ListTile(
-                                  leading: Icon(MaterialCommunityIcons.pill,
-                                      color: Colors.primaries[Random()
-                                          .nextInt(Colors.primaries.length)],
-                                      size: 50),
-                                  title: Text(widget.medications[index].name,
-                                      style:
-                                          TextStyle(color: Colors.grey[800])),
-                                  subtitle: Text(
-                                      'Dosage: ${widget.medications[index].dosage.toString()} Timing: ${widget.medications[index].timing.sentenceCase}',
-                                      style:
-                                          TextStyle(color: Colors.grey[600])),
-                                  trailing: Icon(Icons.keyboard_arrow_right,
-                                      color: Colors.grey[600]),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            WebMedicationScreen(
-                                          medication: widget.medications[index],
-                                          doctor: widget.doctor,
+                          FutureBuilder(
+                            future: _medicationsList,
+                            builder: (context, AsyncSnapshot snap) {
+                              if (!snap.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else
+                                return ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: snap.data.length,
+                                  itemBuilder: (context, index) {
+                                    Medication medication = snap.data[index];
+                                    return Card(
+                                      color: Colors.grey[100],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
+                                      ),
+                                      child: ListTile(
+                                        leading: Icon(
+                                            MaterialCommunityIcons.pill,
+                                            color: Colors.primaries[Random()
+                                                .nextInt(
+                                                    Colors.primaries.length)],
+                                            size: 50),
+                                        title: Text(medication.name,
+                                            style: TextStyle(
+                                              color: Colors.grey[800],
+                                            )),
+                                        subtitle: Text(
+                                          'Dosage: ${medication.dosage.toString()} Timing: ${medication.timing.sentenceCase}',
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                          ),
                                         ),
+                                        trailing: Icon(
+                                            Icons.keyboard_arrow_right,
+                                            color: Colors.grey[600]),
+                                        onTap: () async {
+                                          await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  WebMedicationScreen(
+                                                medication: medication,
+                                                doctor: widget.doctor,
+                                              ),
+                                            ),
+                                          );
+                                          refreshList();
+                                        },
                                       ),
                                     );
                                   },
-                                ),
-                              );
+                                );
                             },
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               IconButton(
+                                  tooltip: 'Delete',
                                   iconSize: 42,
                                   icon: Icon(Icons.delete, color: Colors.red),
                                   onPressed: () async {
@@ -336,6 +388,7 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                                     }
                                   }),
                               IconButton(
+                                tooltip: 'Save',
                                 iconSize: 42,
                                 icon: Icon(Icons.save, color: Colors.blue),
                                 onPressed: () async {
@@ -344,8 +397,6 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                                         _firstNameController.text;
                                     widget.patient.lastName =
                                         _lastNameController.text;
-                                    widget.patient.birthdate =
-                                        _birthdateController.text;
 
                                     var patientDataAccess = DIContainer.getIt
                                         .get<PatientDataAccess>();

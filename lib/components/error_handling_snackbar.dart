@@ -12,7 +12,7 @@ class ErrorHandlingSnackbar {
       ),
       content: Text(
         e.toString(),
-        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.normal),
+        style: TextStyle(fontSize: 18.0),
       ),
       action: SnackBarAction(
         label: 'Close',

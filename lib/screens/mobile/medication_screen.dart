@@ -21,6 +21,7 @@ class MobileMedicationScreen extends StatelessWidget {
             child: Image.asset('assets/details.png',
                 height: MediaQuery.of(context).size.height * 0.20),
           ),
+          SizedBox(height: 12),
           DetailText(
             label: 'Doctor name',
             data: '${doctor.firstName} ${doctor.lastName}',

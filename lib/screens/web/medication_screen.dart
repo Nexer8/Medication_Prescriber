@@ -9,6 +9,7 @@ import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
 import 'package:ptsiim/services/medication_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
+import 'package:ptsiim/utils/api_constants.dart';
 import 'package:ptsiim/utils/input_validators.dart';
 import 'package:recase/recase.dart';
 
@@ -25,8 +26,11 @@ class WebMedicationScreen extends StatefulWidget {
 class _WebMedicationScreenState extends State<WebMedicationScreen> {
   TextEditingController _nameController;
   TextEditingController _dosageController;
-  final _formKey = GlobalKey<FormState>();
+  TextEditingController _startDateController;
+  TextEditingController _endDateController;
   String _timing;
+
+  final _formKey = GlobalKey<FormState>();
 
   void initState() {
     super.initState();
@@ -34,6 +38,10 @@ class _WebMedicationScreenState extends State<WebMedicationScreen> {
     _dosageController =
         TextEditingController(text: widget.medication.dosage.toString());
     _timing = widget.medication.timing.sentenceCase;
+    _startDateController = TextEditingController(
+        text: widget.medication.startDate.substring(0, 10));
+    _endDateController =
+        TextEditingController(text: widget.medication.endDate.substring(0, 10));
   }
 
   @override
@@ -77,7 +85,7 @@ class _WebMedicationScreenState extends State<WebMedicationScreen> {
                           DetailTextFormField(
                             label: 'Name',
                             controller: _nameController,
-                            validator: validateName,
+                            validator: validateMedicationName,
                           ),
                           DetailTextFormField(
                             label: 'Dosage',
@@ -85,7 +93,7 @@ class _WebMedicationScreenState extends State<WebMedicationScreen> {
                             validator: validateDosage,
                           ),
                           DatePicker(
-                            date: widget.medication.startDate,
+                            controller: _startDateController,
                             label: 'Start date',
                             onTap: () async {
                               DateTime initialDate =
@@ -100,6 +108,9 @@ class _WebMedicationScreenState extends State<WebMedicationScreen> {
                                 setState(
                                   () {
                                     initialDate = picked;
+                                    _startDateController.text = picked
+                                        .toIso8601String()
+                                        .substring(0, 10);
                                     widget.medication.startDate =
                                         picked.toIso8601String();
                                   },
@@ -107,7 +118,7 @@ class _WebMedicationScreenState extends State<WebMedicationScreen> {
                             },
                           ),
                           DatePicker(
-                            date: widget.medication.endDate,
+                            controller: _endDateController,
                             label: 'End date',
                             onTap: () async {
                               DateTime initialDate =
@@ -122,14 +133,19 @@ class _WebMedicationScreenState extends State<WebMedicationScreen> {
                                 setState(
                                   () {
                                     initialDate = picked;
-                                    widget.medication.endDate =
-                                        picked.toIso8601String();
+                                    _endDateController.text = picked
+                                        .toIso8601String()
+                                        .substring(0, 10);
+                                    widget.medication.endDate = picked
+                                            .toIso8601String()
+                                            .substring(0, 10) +
+                                        endDateTime;
                                   },
                                 );
                             },
                           ),
                           DropDownButton(
-                            hintText: _timing,
+                            timing: _timing,
                             onChanged: (String newValue) {
                               setState(() {
                                 _timing = newValue;
@@ -140,6 +156,7 @@ class _WebMedicationScreenState extends State<WebMedicationScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               IconButton(
+                                  tooltip: 'Delete',
                                   iconSize: 42,
                                   icon: Icon(Icons.delete, color: Colors.red),
                                   onPressed: () async {
@@ -157,6 +174,7 @@ class _WebMedicationScreenState extends State<WebMedicationScreen> {
                                     }
                                   }),
                               IconButton(
+                                tooltip: 'Save',
                                 iconSize: 42,
                                 icon: Icon(Icons.save, color: Colors.blue),
                                 onPressed: () async {

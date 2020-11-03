@@ -1,47 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:ptsiim/utils/input_validators.dart';
+import 'package:ptsiim/utils/style_constants.dart';
 
-class DatePicker extends StatelessWidget {
-  final String date;
+class DatePicker extends StatefulWidget {
   final String label;
   final Function onTap;
+  final TextEditingController controller;
+  final Function validator;
 
-  const DatePicker(
-      {@required this.date, @required this.label, @required this.onTap});
+  DatePicker({
+    @required this.label,
+    this.onTap,
+    this.controller,
+    this.validator,
+  });
 
+  @override
+  _DatePickerState createState() => _DatePickerState();
+}
+
+class _DatePickerState extends State<DatePicker> {
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[600],
-          ),
+          widget.label,
+          style: kLabelTextStyle,
         ),
-        if (date == null)
-          InkWell(
-            child: Text(
-              "               ",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[800],
-              ),
-            ),
-            onTap: onTap,
-          ),
-        if (date != null)
-          InkWell(
-            child: Text(
-              date.substring(0, 10),
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[800],
-              ),
-            ),
-            onTap: onTap,
-          ),
+        TextFormField(
+            controller: widget.controller,
+            validator: validateDate,
+            decoration:
+                InputDecoration(isDense: true, enabledBorder: InputBorder.none),
+            style: kContentTextStyle,
+            readOnly: true,
+            onTap: widget.onTap),
         SizedBox(height: 12),
       ],
     );

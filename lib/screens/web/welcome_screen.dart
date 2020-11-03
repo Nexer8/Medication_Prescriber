@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
-import 'package:ptsiim/components/id_text_form_field.dart';
+import 'package:ptsiim/components/rounded_text_form_field.dart';
 import 'package:ptsiim/components/login_raised_button.dart';
 import 'package:ptsiim/models/doctor.dart';
-import 'package:ptsiim/models/patient.dart';
 import 'package:ptsiim/screens/web/home_screen.dart';
 import 'package:ptsiim/services/doctor_data_access.dart';
-import 'package:ptsiim/services/patient_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
 import 'package:ptsiim/utils/input_validators.dart';
 
@@ -38,7 +36,7 @@ class WebWelcomeScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'System management for doctors',
+                      'Management system for doctors',
                       style: TextStyle(
                         color: Colors.grey[100],
                         fontSize: 42,
@@ -54,7 +52,8 @@ class WebWelcomeScreen extends StatelessWidget {
                     SizedBox(height: 30),
                     Container(
                       width: 550,
-                      child: IdTextFormField(
+                      child: RoundedTextFormField(
+                        hintText: "Please enter ID",
                         controller: _idController,
                         validator: validateDoctorId,
                       ),
@@ -69,22 +68,15 @@ class WebWelcomeScreen extends StatelessWidget {
                             var doctorDataAccess =
                                 DIContainer.getIt.get<DoctorDataAccess>();
 
-                            var patientDataAccess =
-                                DIContainer.getIt.get<PatientDataAccess>();
-
                             try {
                               Doctor doctor = await doctorDataAccess
                                   .getDoctorById(int.parse(_idController.text));
-
-                              List<Patient> patients = await patientDataAccess
-                                  .getPatientsByDoctorId(doctor.id);
 
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => WebHomeScreen(
                                     doctor: doctor,
-                                    patients: patients,
                                   ),
                                 ),
                               );

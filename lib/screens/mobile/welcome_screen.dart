@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
-import 'package:ptsiim/components/id_text_form_field.dart';
+import 'package:ptsiim/components/rounded_text_form_field.dart';
 import 'package:ptsiim/components/login_raised_button.dart';
-import 'package:ptsiim/models/medication.dart';
 import 'package:ptsiim/models/patient.dart';
 import 'package:ptsiim/screens/mobile/home_screen.dart';
-import 'package:ptsiim/services/medication_data_access.dart';
 import 'package:ptsiim/services/patient_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
 import 'package:ptsiim/utils/input_validators.dart';
@@ -37,7 +35,7 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
                   child: Column(
                     children: [
                       Text(
-                        'Medication prescriber ',
+                        'Medication prescriber',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.grey[100],
@@ -52,7 +50,8 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
                         size: 220,
                       ),
                       SizedBox(height: 30),
-                      IdTextFormField(
+                      RoundedTextFormField(
+                        hintText: "Please enter ID",
                         controller: _idController,
                         validator: validatePersonalId,
                       ),
@@ -65,25 +64,17 @@ class _MobileWelcomeScreenState extends State<MobileWelcomeScreen> {
                             if (_formKey.currentState.validate()) {
                               var patientDataAccess =
                                   DIContainer.getIt.get<PatientDataAccess>();
-                              var medicationDataAccess =
-                                  DIContainer.getIt.get<MedicationDataAccess>();
 
                               try {
                                 Patient patient =
                                     await patientDataAccess.getPatientById(
                                         int.parse(_idController.text));
 
-                                List<Medication> medications =
-                                    await medicationDataAccess
-                                        .getMedicationsByPatientIdAndDate(
-                                            patient.personalId, DateTime.now());
-
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => MobileHomeScreen(
                                       patient: patient,
-                                      medications: medications,
                                     ),
                                   ),
                                 );

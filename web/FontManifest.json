@@ -1,0 +1,14 @@
+[
+  {
+    "family": "Lato",
+    "fonts": [
+      {
+        "asset": "fonts/Lato-Regular.ttf"
+      },
+      {
+        "asset": "fonts/Lato-Italic.ttf",
+        "style": "italic"
+      }
+    ]
+  }
+]

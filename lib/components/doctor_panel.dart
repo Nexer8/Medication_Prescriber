@@ -49,15 +49,18 @@ class DoctorPanel extends StatelessWidget {
                         color: Colors.grey[100],
                       ),
                     ),
+                    SizedBox(height: 20),
                     Text(
                       doctor.specialization,
                       style: TextStyle(
                         fontSize: 22,
                         color: Colors.grey[100],
+                        fontStyle: FontStyle.italic,
                       ),
                     ),
                     Spacer(),
                     IconButton(
+                      tooltip: 'Logout',
                       icon:
                           Icon(Icons.logout, size: 35, color: Colors.grey[100]),
                       onPressed: () {

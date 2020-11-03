@@ -25,6 +25,7 @@ class MedicationPrescriber extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Medication prescriber',
       theme: ThemeData(
+        fontFamily: 'Lato',
         primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),

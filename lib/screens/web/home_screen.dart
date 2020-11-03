@@ -15,9 +15,8 @@ import 'package:ptsiim/utils/input_validators.dart';
 
 class WebHomeScreen extends StatefulWidget {
   final Doctor doctor;
-  final List<Patient> patients;
 
-  const WebHomeScreen({this.doctor, this.patients});
+  const WebHomeScreen({this.doctor});
 
   @override
   _WebHomeScreenState createState() => _WebHomeScreenState();
@@ -27,8 +26,33 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _personalIdController = TextEditingController();
-  String _birthdate;
+  final _birthdateController = TextEditingController(text: "");
+  final _searchController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
+
+  var patientDataAccess = DIContainer.getIt.get<PatientDataAccess>();
+
+  Future<List<Patient>> _patientsList;
+
+  Future<Null> refreshList() async {
+    setState(() {
+      _patientsList = patientDataAccess.getPatientsByDoctorId(widget.doctor.id);
+    });
+  }
+
+  void clearController() {
+    _firstNameController.clear();
+    _lastNameController.clear();
+    _personalIdController.clear();
+    _birthdateController.clear();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _patientsList = patientDataAccess.getPatientsByDoctorId(widget.doctor.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +60,8 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
       floatingActionButton: FloatingActionButton(
         tooltip: 'Add new patient',
         child: Icon(Icons.add),
-        onPressed: () {
-          showDialog(
+        onPressed: () async {
+          bool isRefreshNeeded = await showDialog(
             context: context,
             builder: (context) => GestureDetector(
               onTap: () => Navigator.of(context).pop(),
@@ -54,29 +78,39 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
                             Radius.circular(25.0),
                           ),
                         ),
-                        title: Text('Enter new patient'),
+                        title: Text(
+                          'New patient',
+                        ),
                         children: [
                           Container(
-                            height: 350,
-                            width: 400,
+                            width: MediaQuery.of(context).size.width * 0.2,
                             child: SingleChildScrollView(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   DetailTextFormField(
+                                      controller: _firstNameController,
+                                      validator: validateName,
+                                      label: 'First name'),
+                                  DetailTextFormField(
+                                      controller: _lastNameController,
+                                      validator: validateName,
+                                      label: 'Last name'),
+                                  DetailTextFormField(
                                       controller: _personalIdController,
                                       validator: validatePersonalId,
                                       label: 'PESEL'),
                                   DatePicker(
-                                    date: _birthdate,
+                                    controller: _birthdateController,
+                                    validator: validateDate,
                                     label: 'Birthdate',
                                     onTap: () async {
                                       DateTime initialDate;
-                                      if (_birthdate == null) {
+                                      if (_birthdateController.text == "") {
                                         initialDate = DateTime.now();
                                       } else {
-                                        initialDate =
-                                            DateTime.parse(_birthdate);
+                                        initialDate = DateTime.parse(
+                                            _birthdateController.text);
                                       }
                                       DateTime picked = await showDatePicker(
                                         context: context,
@@ -89,35 +123,31 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
                                         setState(
                                           () {
                                             initialDate = picked;
-                                            _birthdate =
-                                                picked.toIso8601String();
+                                            _birthdateController.text = picked
+                                                .toIso8601String()
+                                                .substring(0, 10);
                                           },
                                         );
                                     },
                                   ),
-                                  DetailTextFormField(
-                                      controller: _firstNameController,
-                                      validator: validateName,
-                                      label: 'First name'),
-                                  DetailTextFormField(
-                                      controller: _lastNameController,
-                                      validator: validateName,
-                                      label: 'Last name'),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       IconButton(
+                                        tooltip: 'Cancel',
                                         icon: Icon(
                                           Icons.cancel_outlined,
                                           color: Colors.red,
                                         ),
                                         iconSize: 42,
                                         onPressed: () {
-                                          Navigator.pop(context);
+                                          clearController();
+                                          Navigator.pop(context, false);
                                         },
                                       ),
                                       IconButton(
+                                        tooltip: 'Add',
                                         icon: Icon(
                                           Icons.add_circle_outline,
                                           color: Colors.green,
@@ -135,7 +165,9 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
                                                       _firstNameController.text,
                                                   lastName:
                                                       _lastNameController.text,
-                                                  birthdate: _birthdate);
+                                                  birthdate:
+                                                      _birthdateController
+                                                          .text);
 
                                               var patientDataAccess =
                                                   DIContainer.getIt
@@ -144,7 +176,8 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
                                               await patientDataAccess
                                                   .createPatient(patient);
 
-                                              Navigator.pop(context);
+                                              clearController();
+                                              Navigator.pop(context, true);
                                             } catch (e) {
                                               ErrorHandlingSnackbar.show(
                                                   e, context);
@@ -166,6 +199,7 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
               ),
             ),
           );
+          if (isRefreshNeeded) refreshList();
         },
       ),
       body: SafeArea(
@@ -196,54 +230,84 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
                         ),
                       ),
                       SizedBox(height: 20),
+                      //TODO: search bar
+                      TextFormField(
+                        onChanged: (value) {},
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.grey[100],
+                          hintText: "Search",
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(25.0),
+                            ),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
                       Expanded(
-                        child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: widget.patients.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              color: Colors.grey[100],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25.0),
-                              ),
-                              child: ListTile(
-                                leading: Icon(
-                                  FlutterIcons.account_mco,
-                                  size: 50,
-                                ),
-                                title: Text(
-                                  '${widget.patients[index].firstName} ${widget.patients[index].lastName}',
-                                ),
-                                subtitle: Text(
-                                  widget.patients[index].personalId.toString(),
-                                ),
-                                onTap: () async {
-                                  var medicationDataAccess = DIContainer.getIt
-                                      .get<MedicationDataAccess>();
-
-                                  try {
-                                    List<Medication> medications =
-                                        await medicationDataAccess
-                                            .getMedicationsByPatientId(widget
-                                                .patients[index].personalId);
-
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => WebPatientScreen(
-                                          patient: widget.patients[index],
-                                          medications: medications,
-                                          doctor: widget.doctor,
-                                        ),
+                        child: FutureBuilder(
+                          future: _patientsList,
+                          builder: (context, AsyncSnapshot snap) {
+                            if (!snap.hasData) {
+                              return Center(child: CircularProgressIndicator());
+                            } else
+                              return ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemCount: snap.data.length,
+                                itemBuilder: (context, index) {
+                                  Patient patient = snap.data[index];
+                                  return Card(
+                                    color: Colors.grey[100],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                    ),
+                                    child: ListTile(
+                                      leading: Icon(
+                                        FlutterIcons.account_mco,
+                                        size: 50,
                                       ),
-                                    );
-                                  } catch (e) {
-                                    ErrorHandlingSnackbar.show(e, context);
-                                  }
+                                      title: Text(
+                                        '${patient.firstName} ${patient.lastName}',
+                                      ),
+                                      subtitle:
+                                          Text(patient.personalId.toString()),
+                                      onTap: () async {
+                                        var medicationDataAccess = DIContainer
+                                            .getIt
+                                            .get<MedicationDataAccess>();
+
+                                        try {
+                                          List<Medication> medications =
+                                              await medicationDataAccess
+                                                  .getMedicationsByPatientId(
+                                                      patient.personalId);
+
+                                          await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  WebPatientScreen(
+                                                patient: patient,
+                                                medications: medications,
+                                                doctor: widget.doctor,
+                                              ),
+                                            ),
+                                          );
+                                          refreshList();
+                                        } catch (e) {
+                                          ErrorHandlingSnackbar.show(
+                                              e, context);
+                                        }
+                                      },
+                                    ),
+                                  );
                                 },
-                              ),
-                            );
+                              );
                           },
                         ),
                       )

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ptsiim/utils/style_constants.dart';
 
-class IdTextFormField extends StatelessWidget {
-  IdTextFormField({@required this.controller, @required this.validator});
+class RoundedTextFormField extends StatelessWidget {
+  RoundedTextFormField({@required this.controller, @required this.validator,@required this.hintText});
 
   final TextEditingController controller;
+  final String hintText;
   final Function validator;
 
   @override
@@ -12,6 +14,7 @@ class IdTextFormField extends StatelessWidget {
       controller: controller,
       keyboardType: TextInputType.number,
       cursorColor: Colors.green,
+      style: kContentTextStyle,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.fromLTRB(24.0, 2.0, 2.0, 0.0),
         filled: true,
@@ -21,10 +24,8 @@ class IdTextFormField extends StatelessWidget {
           borderRadius: BorderRadius.circular(25.0),
           borderSide: BorderSide.none,
         ),
-        hintStyle: TextStyle(
-          color: Colors.grey[800],
-        ),
-        hintText: "Please enter ID",
+        hintStyle: kContentTextStyle,
+        hintText: hintText,
       ),
       validator: validator,
     );

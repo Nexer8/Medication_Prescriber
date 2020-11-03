@@ -10,19 +10,38 @@ import 'package:ptsiim/screens/mobile/medication_screen.dart';
 import 'package:ptsiim/screens/mobile/profile_screen.dart';
 import 'package:ptsiim/screens/mobile/welcome_screen.dart';
 import 'package:ptsiim/services/doctor_data_access.dart';
+import 'package:ptsiim/services/medication_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
+import 'package:ptsiim/utils/style_constants.dart';
+import 'package:recase/recase.dart';
 
 class MobileHomeScreen extends StatefulWidget {
   final Patient patient;
-  final List<Medication> medications;
 
-  MobileHomeScreen({@required this.patient, @required this.medications});
+  MobileHomeScreen({@required this.patient});
 
   @override
   _MobileHomeScreenState createState() => _MobileHomeScreenState();
 }
 
 class _MobileHomeScreenState extends State<MobileHomeScreen> {
+  var medicationDataAccess = DIContainer.getIt.get<MedicationDataAccess>();
+
+  Future<List<Medication>> _medicationsList;
+
+  Future<Null> refreshList() async {
+    setState(() {
+      _medicationsList = medicationDataAccess.getMedicationsByPatientIdAndDate(
+          widget.patient.personalId, DateTime.now());
+    });
+  }
+
+  void initState() {
+    super.initState();
+    _medicationsList = medicationDataAccess.getMedicationsByPatientIdAndDate(
+        widget.patient.personalId, DateTime.now());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,12 +120,22 @@ class _MobileHomeScreenState extends State<MobileHomeScreen> {
                             ),
                           ),
                           SizedBox(height: 20),
-                          Text(
-                            'Your plan for today:\n${widget.medications.length} medicines',
-                            style: TextStyle(
-                              color: Colors.grey[100],
-                              fontSize: 16,
-                            ),
+                          FutureBuilder(
+                            future: _medicationsList,
+                            builder: (context, AsyncSnapshot snap) {
+                              if (!snap.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                return Text(
+                                  'Your plan for today:\n${snap.data.length} medicines',
+                                  style: TextStyle(
+                                    color: Colors.grey[100],
+                                    fontSize: 16,
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ],
                       ),
@@ -129,62 +158,71 @@ class _MobileHomeScreenState extends State<MobileHomeScreen> {
                 ),
                 SizedBox(height: 10),
                 Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: widget.medications.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        color: Colors.grey[100],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        child: ListTile(
-                          leading: Icon(
-                            MaterialCommunityIcons.pill,
-                            color: Colors.primaries[
-                                Random().nextInt(Colors.primaries.length)],
-                            size: 50,
-                          ),
-                          title: Text(
-                            widget.medications[index].name,
-                            style: TextStyle(
-                              color: Colors.grey[800],
-                            ),
-                          ),
-                          subtitle: Text(
-                            'Dosage: ${widget.medications[index].dosage.toString()} Timing: ${widget.medications[index].timing}',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          trailing: Icon(
-                            Icons.keyboard_arrow_right,
-                            color: Colors.grey[600],
-                          ),
-                          onTap: () async {
-                            var doctorDataAccess =
-                                DIContainer.getIt.get<DoctorDataAccess>();
+                  child: RefreshIndicator(
+                    onRefresh: refreshList,
+                    child: FutureBuilder(
+                      future: _medicationsList,
+                      builder: (context, AsyncSnapshot snap) {
+                        if (!snap.hasData) {
+                          return Center(child: CircularProgressIndicator());
+                        } else {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: snap.data.length,
+                            itemBuilder: (context, index) {
+                              Medication medication = snap.data[index];
+                              return Card(
+                                color: Colors.grey[100],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                ),
+                                child: ListTile(
+                                  leading: Icon(
+                                    MaterialCommunityIcons.pill,
+                                    color: Colors.primaries[Random()
+                                        .nextInt(Colors.primaries.length)],
+                                    size: 50,
+                                  ),
+                                  title: Text(
+                                    medication.name,
+                                    style: kContentTextStyle,
+                                  ),
+                                  subtitle: Text(
+                                    'Dosage: ${medication.dosage.toString()} Timing: ${medication.timing.sentenceCase}',
+                                    style: TextStyle(color: Colors.grey[600]),
+                                  ),
+                                  trailing: Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.grey[600],
+                                  ),
+                                  onTap: () async {
+                                    var doctorDataAccess = DIContainer.getIt
+                                        .get<DoctorDataAccess>();
 
-                            try {
-                              Doctor doctor =
-                                  await doctorDataAccess.getDoctorById(
-                                      widget.medications[index].doctorId);
+                                    try {
+                                      Doctor doctor = await doctorDataAccess
+                                          .getDoctorById(medication.doctorId);
 
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MobileMedicationScreen(
-                                      doctor: doctor,
-                                      medication: widget.medications[index]),
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              MobileMedicationScreen(
+                                                  doctor: doctor,
+                                                  medication: medication),
+                                        ),
+                                      );
+                                    } catch (e) {
+                                      ErrorHandlingSnackbar.show(e, context);
+                                    }
+                                  },
                                 ),
                               );
-                            } catch (e) {
-                              ErrorHandlingSnackbar.show(e, context);
-                            }
-                          },
-                        ),
-                      );
-                    },
+                            },
+                          );
+                        }
+                      },
+                    ),
                   ),
                 ),
               ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ptsiim/utils/style_constants.dart';
 
 class DetailTextFormField extends StatelessWidget {
   const DetailTextFormField({
@@ -19,20 +20,14 @@ class DetailTextFormField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[600],
-          ),
+          style: kLabelTextStyle,
         ),
         TextFormField(
           validator: validator,
           controller: controller,
           decoration:
               InputDecoration(isDense: true, enabledBorder: InputBorder.none),
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.grey[800],
-          ),
+          style: kContentTextStyle,
         ),
         SizedBox(height: 12),
       ],

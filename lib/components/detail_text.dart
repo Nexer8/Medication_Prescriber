@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ptsiim/utils/style_constants.dart';
 
 class DetailText extends StatelessWidget {
   DetailText({@required this.label, @required this.data});
@@ -13,17 +14,11 @@ class DetailText extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[600],
-          ),
+          style: kLabelTextStyle,
         ),
         Text(
           data,
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.grey[800],
-          ),
+          style: kContentTextStyle,
         ),
         SizedBox(height: 12),
       ],
