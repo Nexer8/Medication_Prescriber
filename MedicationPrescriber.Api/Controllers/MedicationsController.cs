@@ -9,10 +9,12 @@ using Microsoft.EntityFrameworkCore.Internal;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using System.Net;
 
 namespace MedicationPrescriber.Api.Controllers
 {
     [Route("api/medications")]
+    [Produces("application/json")]
     [ApiController]
     public class MedicationsController : ControllerBase
     {
@@ -25,14 +27,27 @@ namespace MedicationPrescriber.Api.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Get medications
+        /// </summary>
+        /// <param name="date">Get medications for given date</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAsync(DateTime? date)
         {
             var query = await _context.Medications.FilterByDateIfNeeded(date).ToListAsync();
             return Ok(_mapper.Map<List<MedicationDto>>(query));
         }
-         
+
+        /// <summary>
+        /// Get medications by id
+        /// </summary>
+        /// <param name="id">Id of the medication</param>
+        /// <returns></returns>
+        /// <response code="404">If medication with given id does not exist</response>
         [HttpGet("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GeByIdAsync(int id)
         {
             var medication = await _context.Medications.FirstOrDefaultAsync(x => x.Id == id);
@@ -45,9 +60,23 @@ namespace MedicationPrescriber.Api.Controllers
             return Ok(_mapper.Map<MedicationDto>(medication));
         }
 
+        /// <summary>
+        /// Get medications presribed for the patient
+        /// </summary>
+        /// <param name="patientId">PersonalId of patient</param>
+        /// <param name="date">Get medications for given date</param>
+        /// <returns></returns>
+        /// <response code="404">If patient with given id does not exist</response>
         [HttpGet("patient/{patientId}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GeByUserIdAsync(long patientId, DateTime? date)
         {
+            if(!_context.Patients.Any(x => x.PersonalId == patientId))
+            {
+                return NotFound();
+            }
+
             var medication = await _context.Medications
                 .Where(x => x.PatientId == patientId)
                 .FilterByDateIfNeeded(date)
@@ -57,9 +86,23 @@ namespace MedicationPrescriber.Api.Controllers
             return Ok(_mapper.Map<List<MedicationDto>>(medication));
         }
 
+        /// <summary>
+        /// Get medications created by the doctor
+        /// </summary>
+        /// <param name="doctorId">Id of doctor</param>
+        /// <param name="date">Get medications for given date</param>
+        /// <returns></returns>
+        /// <response code="404">If doctor with given id does not exist</response>
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [HttpGet("doctor/{doctorId}")]
         public async Task<IActionResult> GeByDoctorIdAsync(int doctorId, DateTime? date)
         {
+            if (!_context.Doctors.Any(x => x.Id == doctorId))
+            {
+                return NotFound();
+            }
+
             var medication = await _context.Medications
                 .Where(x => x.DoctorId == doctorId)
                 .FilterByDateIfNeeded(date)
@@ -68,8 +111,14 @@ namespace MedicationPrescriber.Api.Controllers
             return Ok(_mapper.Map<List<MedicationDto>>(medication));
         }
 
-
+        /// <summary>
+        /// Create medication
+        /// </summary>
+        /// <param name="medicationdto">Medication to create</param>
+        /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> PostAsync(CreateMedicationDto medicationdto)
         {
             if(!_context.Doctors.Any(x => x.Id == medicationdto.DoctorId))
@@ -88,8 +137,18 @@ namespace MedicationPrescriber.Api.Controllers
             return Ok(_mapper.Map<MedicationDto>(medicationEntity));
         }
 
+        /// <summary>
+        /// Update medication
+        /// </summary>
+        /// <param name="id">Id of medication</param>
+        /// <param name="medicationdto">Medication data to update</param>
+        /// <returns></returns>
+        /// <response code="404">When medcation with given id does not exist</response>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PostAsync(int id, MedicationDto medicationdto)
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> PutAsync(int id, MedicationDto medicationdto)
         {
             var medication = await _context.Medications.FirstOrDefaultAsync(x => x.Id == id);
             if (medication == null)
@@ -118,7 +177,15 @@ namespace MedicationPrescriber.Api.Controllers
             return Ok(medicationdto);
         }
 
+        /// <summary>
+        /// Delete medication
+        /// </summary>
+        /// <param name="id">Id of medication</param>
+        /// <returns></returns>
+        /// <response code="404">When medcation with given id does not exist</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var medication = await _context.Medications.FirstOrDefaultAsync(x => x.Id == id);
@@ -132,6 +199,5 @@ namespace MedicationPrescriber.Api.Controllers
 
             return Ok();
         }
-
     }
 }

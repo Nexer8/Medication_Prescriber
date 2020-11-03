@@ -7,10 +7,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using System.Collections.Generic;
+using System.Net;
 
 namespace MedicationPrescriber.Api.Controllers
 {
     [Route("api/doctors/")]
+    [Produces("application/json")]
     [ApiController]
     public class DoctorsController : ControllerBase
     {
@@ -23,7 +25,14 @@ namespace MedicationPrescriber.Api.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Create doctor
+        /// </summary>
+        /// <param name="doctorDto">Doctor to create</param>
+        /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> PostAsync(CreateDoctorDto doctorDto)
         {
             var user = new User
@@ -42,7 +51,15 @@ namespace MedicationPrescriber.Api.Controllers
             return Ok(_mapper.Map<DoctorDto>(doctorEntity));
         }
 
+        /// <summary>
+        /// Delete doctor
+        /// </summary>
+        /// <param name="id">Id of the doctor</param>
+        /// <returns></returns>
+        /// <response code="404">If doctor with given id does not exist</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var doctorToDelete = _context.Doctors.FirstOrDefault(x => x.Id == id);
@@ -56,7 +73,15 @@ namespace MedicationPrescriber.Api.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Get doctor by Id
+        /// </summary>
+        /// <param name="id">Id of the doctor</param>
+        /// <returns></returns>
+        /// <response code="404">If doctor with given id does not exist</response>
         [HttpGet("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var doctorToDelete =  await _context.Doctors.Include(x => x.User).FirstOrDefaultAsync(x => x.Id == id);
@@ -68,6 +93,10 @@ namespace MedicationPrescriber.Api.Controllers
             return Ok(_mapper.Map<DoctorDto>(doctorToDelete));
         }
 
+        /// <summary>
+        /// Get doctors
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {

@@ -9,6 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
+using System.IO;
+using System.Reflection;
 using static MedicationPrescriber.Api.Dtos.DoctorDto;
 
 namespace MedicationPrescriber
@@ -21,7 +24,7 @@ namespace MedicationPrescriber
         }
 
         public IConfiguration Configuration { get; }
-
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MedicationPresriberDbContext>(options =>
@@ -30,16 +33,18 @@ namespace MedicationPrescriber
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Medication Presriber API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Medication Presriber API", Version = "v1"});
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
             services.AddAutoMapper(typeof(MappingProfile));
+
             services.AddApplicationInsightsTelemetry();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
-
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
@@ -51,7 +56,6 @@ namespace MedicationPrescriber
             {
                 endpoints.MapControllers();
             });
-           // app.UseMvc();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
