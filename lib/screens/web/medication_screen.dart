@@ -7,6 +7,7 @@ import 'package:ptsiim/components/drop_down_button.dart';
 import 'package:ptsiim/components/error_handling_snackbar.dart';
 import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
+import 'package:ptsiim/services/doctor_data_access.dart';
 import 'package:ptsiim/services/medication_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
 import 'package:ptsiim/utils/api_constants.dart';
@@ -16,8 +17,10 @@ import 'package:recase/recase.dart';
 class WebMedicationScreen extends StatefulWidget {
   final Medication medication;
   final Doctor doctor;
+  final Doctor doctorFromMedication;
 
-  WebMedicationScreen({@required this.medication, this.doctor});
+  WebMedicationScreen(
+      {@required this.medication, this.doctor, this.doctorFromMedication});
 
   @override
   _WebMedicationScreenState createState() => _WebMedicationScreenState();
@@ -29,6 +32,8 @@ class _WebMedicationScreenState extends State<WebMedicationScreen> {
   TextEditingController _startDateController;
   TextEditingController _endDateController;
   String _timing;
+
+  final doctorDataAccess = DIContainer.getIt.get<DoctorDataAccess>();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -80,7 +85,7 @@ class _WebMedicationScreenState extends State<WebMedicationScreen> {
                           DetailText(
                             label: 'Doctor name',
                             data:
-                                '${widget.doctor.firstName} ${widget.doctor.lastName}',
+                                '${widget.doctorFromMedication.firstName} ${widget.doctorFromMedication.lastName}',
                           ),
                           DetailTextFormField(
                             label: 'Name',
@@ -168,7 +173,7 @@ class _WebMedicationScreenState extends State<WebMedicationScreen> {
                                           .deleteMedicationById(
                                               widget.medication.id);
 
-                                      Navigator.pop(context);
+                                      Navigator.pop(context, true);
                                     } catch (e) {
                                       ErrorHandlingSnackbar.show(e, context);
                                     }
@@ -193,7 +198,7 @@ class _WebMedicationScreenState extends State<WebMedicationScreen> {
                                       await medicationDataAccess
                                           .editMedicationData(
                                               widget.medication);
-                                      Navigator.pop(context);
+                                      Navigator.pop(context, true);
                                     } catch (e) {
                                       ErrorHandlingSnackbar.show(e, context);
                                     }

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:ptsiim/utils/style_constants.dart';
 
 class RoundedTextFormField extends StatelessWidget {
-  RoundedTextFormField({@required this.controller, @required this.validator,@required this.hintText});
+  RoundedTextFormField(
+      {@required this.controller,
+      @required this.validator,
+      @required this.hintText});
 
   final TextEditingController controller;
   final String hintText;

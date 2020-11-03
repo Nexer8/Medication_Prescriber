@@ -46,120 +46,120 @@ class _MobileHomeScreenState extends State<MobileHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          color: Colors.white,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.logout,
-                        color: Colors.grey[800],
-                        size: 28,
-                      ),
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MobileWelcomeScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.account_circle_rounded,
-                        color: Colors.grey[800],
-                        size: 28,
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                MobileProfileScreen(patient: widget.patient),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: EdgeInsets.all(16.0),
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  child: Row(children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Hello,\n${widget.patient.firstName}!',
-                            style: TextStyle(
-                              color: Colors.grey[100],
-                              fontSize: 34,
+        child: RefreshIndicator(
+          onRefresh: refreshList,
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.logout,
+                          color: Colors.grey[800],
+                          size: 28,
+                        ),
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MobileWelcomeScreen(),
                             ),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            'Nice to see you :)',
-                            style: TextStyle(
-                              color: Colors.grey[100],
-                              fontSize: 18,
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.account_circle_rounded,
+                          color: Colors.grey[800],
+                          size: 28,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  MobileProfileScreen(patient: widget.patient),
                             ),
-                          ),
-                          SizedBox(height: 20),
-                          FutureBuilder(
-                            future: _medicationsList,
-                            builder: (context, AsyncSnapshot snap) {
-                              if (!snap.hasData) {
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              } else {
-                                return Text(
-                                  'Your plan for today:\n${snap.data.length} medicines',
-                                  style: TextStyle(
-                                    color: Colors.grey[100],
-                                    fontSize: 16,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(16.0),
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                    child: Row(children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Hello,\n${widget.patient.firstName}!',
+                              style: TextStyle(
+                                color: Colors.grey[100],
+                                fontSize: 34,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              'Nice to see you :)',
+                              style: TextStyle(
+                                color: Colors.grey[100],
+                                fontSize: 18,
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            FutureBuilder(
+                              future: _medicationsList,
+                              builder: (context, AsyncSnapshot snap) {
+                                if (!snap.hasData) {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                } else {
+                                  return Text(
+                                    'Your plan for today:\n${snap.data.length} medicines',
+                                    style: TextStyle(
+                                      color: Colors.grey[100],
+                                      fontSize: 16,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Image.asset('assets/drugs.png'),
+                      ),
+                    ]),
+                  ),
+                  SizedBox(height: 10),
+                  Padding(
+                    padding: EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      'Daily review',
+                      style: TextStyle(
+                        color: Colors.grey[800],
+                        fontSize: 24,
                       ),
                     ),
-                    Expanded(
-                      child: Image.asset('assets/drugs.png'),
-                    ),
-                  ]),
-                ),
-                SizedBox(height: 10),
-                Padding(
-                  padding: EdgeInsets.only(left: 16.0),
-                  child: Text(
-                    'Daily review:',
-                    style: TextStyle(
-                      color: Colors.grey[800],
-                      fontSize: 24,
-                    ),
                   ),
-                ),
-                SizedBox(height: 10),
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: refreshList,
+                  SizedBox(height: 10),
+                  Expanded(
                     child: FutureBuilder(
                       future: _medicationsList,
                       builder: (context, AsyncSnapshot snap) {
@@ -224,8 +224,8 @@ class _MobileHomeScreenState extends State<MobileHomeScreen> {
                       },
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

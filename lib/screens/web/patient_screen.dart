@@ -12,6 +12,7 @@ import 'package:ptsiim/models/doctor.dart';
 import 'package:ptsiim/models/medication.dart';
 import 'package:ptsiim/models/patient.dart';
 import 'package:ptsiim/screens/web/medication_screen.dart';
+import 'package:ptsiim/services/doctor_data_access.dart';
 import 'package:ptsiim/services/medication_data_access.dart';
 import 'package:ptsiim/services/patient_data_access.dart';
 import 'package:ptsiim/services/service_locator.dart';
@@ -119,7 +120,7 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                                       DatePicker(
                                         controller: _startDateController,
                                         validator: validateDate,
-                                        label: 'Start Date',
+                                        label: 'Start date',
                                         onTap: () async {
                                           DateTime initialDate;
                                           if (_startDateController.text == '') {
@@ -151,7 +152,7 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                                       DatePicker(
                                         controller: _endDateController,
                                         validator: validateDate,
-                                        label: 'End Date',
+                                        label: 'End date',
                                         onTap: () async {
                                           DateTime initialDate;
                                           if (_endDateController.text == '') {
@@ -264,7 +265,8 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                 ),
               ),
             );
-            if (isRefreshNeeded) refreshList();
+            if (isRefreshNeeded != null && isRefreshNeeded == true)
+              refreshList();
           },
         ),
         body: Form(
@@ -349,17 +351,31 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                                             Icons.keyboard_arrow_right,
                                             color: Colors.grey[600]),
                                         onTap: () async {
-                                          await Navigator.push(
+                                          var doctorDataAccess = DIContainer
+                                              .getIt
+                                              .get<DoctorDataAccess>();
+                                          Doctor doctorFromMedication =
+                                              await doctorDataAccess
+                                                  .getDoctorById(
+                                                      medication.doctorId);
+
+                                          var isRefreshNeeded =
+                                              await Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   WebMedicationScreen(
                                                 medication: medication,
                                                 doctor: widget.doctor,
+                                                doctorFromMedication:
+                                                    doctorFromMedication,
                                               ),
                                             ),
                                           );
-                                          refreshList();
+                                          if (isRefreshNeeded != null &&
+                                              isRefreshNeeded == true) {
+                                            refreshList();
+                                          }
                                         },
                                       ),
                                     );
@@ -382,7 +398,7 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                                       await patientDataAccess.deletePatientById(
                                           widget.patient.personalId);
 
-                                      Navigator.pop(context);
+                                      Navigator.pop(context, true);
                                     } catch (e) {
                                       ErrorHandlingSnackbar.show(e, context);
                                     }
@@ -405,7 +421,7 @@ class _WebPatientScreenState extends State<WebPatientScreen> {
                                       await patientDataAccess
                                           .editPatientData(widget.patient);
 
-                                      Navigator.pop(context);
+                                      Navigator.pop(context, true);
                                     } catch (e) {
                                       ErrorHandlingSnackbar.show(e, context);
                                     }

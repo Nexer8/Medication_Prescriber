@@ -33,6 +33,8 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
 
   var patientDataAccess = DIContainer.getIt.get<PatientDataAccess>();
 
+  String searchedString = '';
+
   Future<List<Patient>> _patientsList;
 
   Future<Null> refreshList() async {
@@ -64,7 +66,9 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
           bool isRefreshNeeded = await showDialog(
             context: context,
             builder: (context) => GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
               child: Scaffold(
                 backgroundColor: Colors.transparent,
                 body: Form(
@@ -199,7 +203,7 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
               ),
             ),
           );
-          if (isRefreshNeeded) refreshList();
+          if (isRefreshNeeded != null && isRefreshNeeded == true) refreshList();
         },
       ),
       body: SafeArea(
@@ -231,22 +235,7 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
                       ),
                       SizedBox(height: 20),
                       //TODO: search bar
-                      TextFormField(
-                        onChanged: (value) {},
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.grey[100],
-                          hintText: "Search",
-                          prefixIcon: Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(25.0),
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                      ),
+
                       SizedBox(height: 20),
                       Expanded(
                         child: FutureBuilder(
@@ -254,60 +243,100 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
                           builder: (context, AsyncSnapshot snap) {
                             if (!snap.hasData) {
                               return Center(child: CircularProgressIndicator());
-                            } else
-                              return ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: snap.data.length,
-                                itemBuilder: (context, index) {
-                                  Patient patient = snap.data[index];
-                                  return Card(
-                                    color: Colors.grey[100],
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25.0),
+                            } else {
+                              return Column(
+                                children: [
+                                  TextFormField(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        searchedString = value;
+                                      });
+                                    },
+                                    controller: _searchController,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.grey[100],
+                                      hintText: "Search",
+                                      prefixIcon: Icon(Icons.search),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(25.0),
+                                        ),
+                                        borderSide: BorderSide.none,
+                                      ),
                                     ),
-                                    child: ListTile(
-                                      leading: Icon(
-                                        FlutterIcons.account_mco,
-                                        size: 50,
-                                      ),
-                                      title: Text(
-                                        '${patient.firstName} ${patient.lastName}',
-                                      ),
-                                      subtitle:
-                                          Text(patient.personalId.toString()),
-                                      onTap: () async {
-                                        var medicationDataAccess = DIContainer
-                                            .getIt
-                                            .get<MedicationDataAccess>();
-
-                                        try {
-                                          List<Medication> medications =
-                                              await medicationDataAccess
-                                                  .getMedicationsByPatientId(
-                                                      patient.personalId);
-
-                                          await Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  WebPatientScreen(
-                                                patient: patient,
-                                                medications: medications,
-                                                doctor: widget.doctor,
+                                  ),
+                                  ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    itemCount: snap.data.length,
+                                    itemBuilder: (context, index) {
+                                      Patient patient = snap.data[index];
+                                      return '${patient.firstName} ${patient.lastName}'
+                                              .contains(searchedString)
+                                          ? Card(
+                                              color: Colors.grey[100],
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(25.0),
                                               ),
-                                            ),
-                                          );
-                                          refreshList();
-                                        } catch (e) {
-                                          ErrorHandlingSnackbar.show(
-                                              e, context);
-                                        }
-                                      },
-                                    ),
-                                  );
-                                },
+                                              child: ListTile(
+                                                leading: Icon(
+                                                  FlutterIcons.account_mco,
+                                                  size: 50,
+                                                ),
+                                                title: Text(
+                                                  '${patient.firstName} ${patient.lastName}',
+                                                ),
+                                                subtitle: Text(patient
+                                                    .personalId
+                                                    .toString()),
+                                                onTap: () async {
+                                                  var medicationDataAccess =
+                                                      DIContainer.getIt.get<
+                                                          MedicationDataAccess>();
+
+                                                  try {
+                                                    List<Medication>
+                                                        medications =
+                                                        await medicationDataAccess
+                                                            .getMedicationsByPatientId(
+                                                                patient
+                                                                    .personalId);
+
+                                                    var isRefreshNeeded =
+                                                        await Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            WebPatientScreen(
+                                                          patient: patient,
+                                                          medications:
+                                                              medications,
+                                                          doctor: widget.doctor,
+                                                        ),
+                                                      ),
+                                                    );
+
+                                                    if (isRefreshNeeded !=
+                                                            null &&
+                                                        isRefreshNeeded ==
+                                                            true) {
+                                                      refreshList();
+                                                    }
+                                                  } catch (e) {
+                                                    ErrorHandlingSnackbar.show(
+                                                        e, context);
+                                                  }
+                                                },
+                                              ),
+                                            )
+                                          : Container();
+                                    },
+                                  ),
+                                ],
                               );
+                            }
                           },
                         ),
                       )
