@@ -14,9 +14,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DIContainer.registerServices();
 
-  var secureStorage = DIContainer.getIt.get<FlutterSecureStorage>();
   Patient patient;
-  final String patientId = await secureStorage.read(key: 'personalId');
+  String patientId;
+
+  if (!kIsWeb) {
+    var secureStorage = DIContainer.getIt.get<FlutterSecureStorage>();
+    patientId = await secureStorage.read(key: 'personalId');
+  }
 
   if (patientId != null) {
     var patientDataAccess = DIContainer.getIt.get<PatientDataAccess>();
