@@ -50,7 +50,7 @@ namespace MedicationPrescriber.Api.Controllers
         /// <summary>
         /// Get patient by id
         /// </summary>
-        /// <param name="id">PersonalId ofthe patient</param>
+        /// <param name="id">PersonalId of the patient</param>
         /// <response code="404">If patient with given id does not exist</response>
         /// <returns></returns>
         [HttpGet("{id}")]
