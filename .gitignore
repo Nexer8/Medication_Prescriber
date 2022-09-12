@@ -70,9 +70,6 @@ artifacts/
 *.svclog
 *.scc
 
-# Chutzpah Test files
-_Chutzpah*
-
 # Visual C++ cache files
 ipch/
 *.aps
@@ -90,50 +87,10 @@ ipch/
 *.vspx
 *.sap
 
-# TFS 2012 Local Workspace
-$tf/
-
-# Guidance Automation Toolkit
-*.gpState
-
 # ReSharper is a .NET coding add-in
 _ReSharper*/
 *.[Rr]e[Ss]harper
-*.DotSettings.user
-
-# JustCode is a .NET coding add-in
-.JustCode
-
-# TeamCity is a build add-in
-_TeamCity*
-
-# DotCover is a Code Coverage Tool
-*.dotCover
-
-# NCrunch
-_NCrunch_*
-.*crunch*.local.xml
-nCrunchTemp_*
-
-# MightyMoose
-*.mm.*
-AutoTest.Net/
-
-# Web workbench (sass)
-.sass-cache/
-
-# Installshield output folder
-[Ee]xpress/
-
-# DocProject is a documentation generator add-in
-DocProject/buildhelp/
-DocProject/Help/*.HxT
-DocProject/Help/*.HxC
-DocProject/Help/*.hhc
-DocProject/Help/*.hhk
-DocProject/Help/*.hhp
-DocProject/Help/Html2
-DocProject/Help/html
+*.DotSettings.User
 
 # Click-Once directory
 publish/
@@ -214,20 +171,6 @@ UpgradeLog*.htm
 *.mdf
 *.ldf
 
-# Business Intelligence projects
-*.rdl.data
-*.bim.layout
-*.bim_*.settings
-
-# Microsoft Fakes
-FakesAssemblies/
-
-# GhostDoc plugin setting file
-*.GhostDoc.xml
-
-# Node.js Tools for Visual Studio
-.ntvs_analysis.dat
-
 # Visual Studio 6 build log
 *.plg
 
@@ -246,9 +189,6 @@ _Pvt_Extensions
 .paket/paket.exe
 paket-files/
 
-# FAKE - F# Make
-.fake/
-
 # JetBrains Rider
 .idea/
 *.sln.iml
@@ -259,3 +199,45 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Web related
+lib/generated_plugin_registrant.dart
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
